@@ -15,7 +15,7 @@ Supported traffic sources:
 * Propeller Ads ([api documentation](https://ssp-api.propellerads.com/v5/docs/#/))
 
 Stack:
-* [requests](https://requests.readthedocs.io/en/master/) library for PostgreSQL
+* [requests](https://requests.readthedocs.io/en/master/) library for http-requests
 * [redis](https://pypi.org/project/redis/) library for Redis
 
 <br>
