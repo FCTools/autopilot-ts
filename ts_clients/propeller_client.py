@@ -19,11 +19,19 @@ class PropellerClient(TrafficSourceClient):
 
     def start_campaign(self, campaign_id, api_key):
         requests_url = self._base_requests_url + 'campaigns/play'
-        response = requests.put(requests_url, data=json.dumps({'campaign_ids': [int(campaign_id)]}))
+        data = json.dumps({"campaign_ids": [int(campaign_id)]})
+        response = requests.put(requests_url, data=data,
+                                headers={"Authorization": f"Bearer {api_key}",
+                                         "Accept": "application/json", "Content-Type": "application/json"}
+                                )
 
     def stop_campaign(self, campaign_id, api_key):
         requests_url = self._base_requests_url + 'campaigns/stop'
-        response = requests.put(requests_url, data=json.dumps({'campaign_ids': [int(campaign_id)]}))
+        data = json.dumps({"campaign_ids": [int(campaign_id)]})
+        response = requests.put(requests_url, data=data,
+                                headers={"Authorization": f"Bearer {api_key}",
+                                         "Accept": "application/json", "Content-Type": "application/json"}
+                                )
 
     def add_site_to_black_list(self, site_id, api_key):
         raise NotImplemented()

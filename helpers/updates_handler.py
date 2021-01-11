@@ -14,12 +14,8 @@ class UpdatesHandler:
         self._propeller_client = PropellerClient()
 
     def handle(self, update):
-        key, value = update
-
-        # log key for task
-
-        if value['ts'] == 'prop':
-            if value['action'] == 'start':
-                self._propeller_client.start_campaign(value['campaign_id'], value['api_key'])
-            elif value['action'] == 'stop':
-                self._propeller_client.stop_campaign(value['campaign_id'], value['api_key'])
+        if update['ts'] == 'Propeller Ads':
+            if update['action'] == 1:
+                self._propeller_client.start_campaign(update['campaign_id'], update['api_key'])
+            elif update['action'] == 2:
+                self._propeller_client.stop_campaign(update['campaign_id'], update['api_key'])
