@@ -17,8 +17,8 @@ class TrafficSourceClient:
     def start_campaign(self, campaign_id, api_key):
         raise NotImplemented()
 
-    def add_site_to_black_list(self, site_id, api_key):
+    def add_zones_to_black_list(self, campaign_id, site_id, api_key):
         raise NotImplemented()
 
-    def add_site_to_white_list(self, site_id, api_key):
-        raise NotImplemented(0)
+    def add_zones_to_white_list(self, campaign_id, site_id, api_key):
+        raise NotImplemented()

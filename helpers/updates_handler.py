@@ -19,3 +19,9 @@ class UpdatesHandler:
                 self._propeller_client.start_campaign(update['campaign_id'], update['api_key'])
             elif update['action'] == 2:
                 self._propeller_client.stop_campaign(update['campaign_id'], update['api_key'])
+            elif update['action'] == 3:
+                self._propeller_client.add_zones_to_black_list(update['campaign_id'], update['zones_list'],
+                                                               update['api_key'])
+            elif update['action'] == 4:
+                self._propeller_client.add_zones_to_white_list(update['campaign_id'], update['zones_list'],
+                                                               update['api_key'])
