@@ -9,19 +9,25 @@
 from ts_clients.propeller_client import PropellerClient
 
 
+PLAY_CAMPAIGN = 1
+STOP_CAMPAIGN = 2
+EXCLUDE_ZONE = 3
+INCLUDE_ZONE = 4
+
+
 class UpdatesHandler:
     def __init__(self):
         self._propeller_client = PropellerClient()
 
     def handle(self, update):
         if update['ts'] == 'Propeller Ads':
-            if update['action'] == 1:
-                self._propeller_client.start_campaign(update['campaign_id'], update['api_key'])
-            elif update['action'] == 2:
-                self._propeller_client.stop_campaign(update['campaign_id'], update['api_key'])
-            elif update['action'] == 3:
-                self._propeller_client.add_zones_to_black_list(update['campaign_id'], update['zones_list'],
-                                                               update['api_key'])
-            elif update['action'] == 4:
-                self._propeller_client.add_zones_to_white_list(update['campaign_id'], update['zones_list'],
-                                                               update['api_key'])
+            if update['action'] == PLAY_CAMPAIGN:
+                self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'], status='play')
+            elif update['action'] == STOP_CAMPAIGN:
+                self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'], status='stop')
+            elif update['action'] == EXCLUDE_ZONE:
+                self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                                                         update['api_key'], list_type='black')
+            elif update['action'] == INCLUDE_ZONE:
+                self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                                                         update['api_key'], list_type='white')

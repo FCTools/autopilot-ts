@@ -11,14 +11,8 @@ class TrafficSourceClient:
     def __init__(self):
         pass
 
-    def stop_campaign(self, campaign_id, api_key):
+    def change_campaign_status(self, campaign_id, api_key, status):
         raise NotImplemented()
 
-    def start_campaign(self, campaign_id, api_key):
-        raise NotImplemented()
-
-    def add_zones_to_black_list(self, campaign_id, site_id, api_key):
-        raise NotImplemented()
-
-    def add_zones_to_white_list(self, campaign_id, site_id, api_key):
+    def add_zones_to_list(self, campaign_id, site_id, api_key, list_type):
         raise NotImplemented()
