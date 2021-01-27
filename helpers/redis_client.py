@@ -14,21 +14,26 @@ class RedisClient:
     def __init__(self):
         self._redis_port = os.getenv('REDIS_PORT')
         self._redis_host = os.getenv('REDIS_HOST')
-        # self._redis_password = os.getenv('REDIS_PASSWORD')
 
         self._server = redis.Redis(host=self._redis_host, port=self._redis_port)
 
     def get_updates(self):
         keys = self._server.keys()
-        updates = set()
+        updates = {}
 
         if keys:
             for key in keys:
-                updates.add(self._server.get(key))
+                updates[key] = self._server.get(key)
 
-            self._server.delete(*keys)
+        self.remove_keys(keys)
 
         return updates
+
+    def append(self, key, value):
+        self._server.append(key, value)
+
+    def remove_keys(self, keys):
+        self._server.delete(*keys)
 
     def clear(self):
         self._server.flushdb()

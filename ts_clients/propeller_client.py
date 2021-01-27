@@ -6,8 +6,11 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
-import requests
 import json
+
+import requests
+
+from helpers import requests_manager
 from ts_clients.base_client import TrafficSourceClient
 
 
@@ -23,12 +26,15 @@ class PropellerClient(TrafficSourceClient):
         elif status == 'play':
             requests_url = self._base_requests_url + 'campaigns/play'
         else:
-            return
+            return f'Incorrect status given: {status}'
 
-        response = requests.put(requests_url, data=json.dumps({"campaign_ids": [int(campaign_id)]}),
-                                headers={"Authorization": f"Bearer {api_key}",
-                                         "Accept": "application/json", "Content-Type": "application/json"}
-                                )
+        response = requests_manager.put(requests.Session(), requests_url,
+                                        data=json.dumps({"campaign_ids": [int(campaign_id)]}),
+                                        headers={"Authorization": f"Bearer {api_key}",
+                                                 "Accept": "application/json", "Content-Type": "application/json"})
+
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to change campaign status in propeller: {response}'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type):
         if list_type == 'black':
@@ -38,17 +44,24 @@ class PropellerClient(TrafficSourceClient):
         else:
             return
 
-        current_zones_list = set(requests.get(requests_url, params={'campaignId': str(campaign_id)},
-                                              headers={"Authorization": f"Bearer {api_key}",
-                                                       "Accept": "application/json", "Content-Type": "application/json"}
-                                              ).json()['zone'])
+        response = requests_manager.get(requests.Session(), requests_url, params={'campaignId': str(campaign_id)},
+                                        headers={"Authorization": f"Bearer {api_key}",
+                                                 "Accept": "application/json", "Content-Type": "application/json"})
+
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to get campaign {list_type} list: {response}'
+
+        current_zones_list = set(response.json()['zone'])
         start_len = len(current_zones_list)
 
         for zone in zones_list:
             current_zones_list.add(zone)
 
         if len(current_zones_list) != start_len:
-            data = json.dumps({"zone": list(current_zones_list)})
-            response = requests.put(requests_url, data=data, params={'campaignId': str(campaign_id)},
-                                    headers={"Authorization": f"Bearer {api_key}",
-                                             "Accept": "application/json", "Content-Type": "application/json"})
+            response = requests_manager.put(requests.Session(), requests_url,
+                                            data=json.dumps({"zone": list(current_zones_list)}),
+                                            params={'campaignId': str(campaign_id)},
+                                            headers={"Authorization": f"Bearer {api_key}",
+                                                     "Accept": "application/json", "Content-Type": "application/json"})
+            if not isinstance(response, requests.Response):
+                return f'Error occurred while trying to set campaign {list_type} list: {response}'

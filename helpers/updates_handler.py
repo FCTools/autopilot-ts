@@ -8,7 +8,6 @@
 
 from ts_clients.propeller_client import PropellerClient
 
-
 PLAY_CAMPAIGN = 1
 STOP_CAMPAIGN = 2
 EXCLUDE_ZONE = 3
@@ -22,12 +21,20 @@ class UpdatesHandler:
     def handle(self, update):
         if update['ts'] == 'Propeller Ads':
             if update['action'] == PLAY_CAMPAIGN:
-                self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'], status='play')
+                status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
+                                                                       status='play')
             elif update['action'] == STOP_CAMPAIGN:
-                self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'], status='stop')
+                status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
+                                                                       status='stop')
             elif update['action'] == EXCLUDE_ZONE:
-                self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
-                                                         update['api_key'], list_type='black')
+                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                                                                  update['api_key'], list_type='black')
             elif update['action'] == INCLUDE_ZONE:
-                self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
-                                                         update['api_key'], list_type='white')
+                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                                                                  update['api_key'], list_type='white')
+            else:
+                return f"Unknown action: {update['action']}"
+        else:
+            return f"Unknown traffic source: {update['ts']}"
+
+        return status
