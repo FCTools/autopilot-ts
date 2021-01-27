@@ -18,7 +18,8 @@ from helpers.redis_client import RedisClient
 from helpers.updates_handler import UpdatesHandler
 
 updates_list = {}
-lock = threading.Lock()
+updates_lock = threading.Lock()
+redis_lock = threading.Lock()
 handler = UpdatesHandler()
 
 # update format:
@@ -53,7 +54,7 @@ def _configure_logger():
 
 def process():
     while True:
-        with lock:
+        with updates_lock:
             update = None
             if len(updates_list):
                 key = random.choice(list(updates_list.keys()))
@@ -66,11 +67,15 @@ def process():
 
             if status == 'OK':
                 _logger.info(f'Update successfully handled: {key}')
-                redis_client.remove_keys([key])
+
+                with redis_lock:
+                    redis_client.remove_keys([key])
             else:
                 _logger.error(f"Can't handle update {key}: {status}")
                 time.sleep(10)
-                redis_client.append(key, json.dumps(update))
+
+                with redis_lock:
+                    redis_client.append(key, json.dumps(update))
 
         time.sleep(5)
 
@@ -84,10 +89,22 @@ workers_pool = [threading.Thread(target=process, args=(), daemon=True) for _ in 
 for worker in workers_pool:
     worker.start()
 
-while True:
-    updates = redis_client.get_updates()
+_logger.info('Start workers. Start listening for updates...')
 
-    with lock:
-        updates_list.update(updates)
+try:
+    while True:
+        with redis_lock:
+            updates = redis_client.get_updates()
 
-    time.sleep(CHECKING_TIMEOUT)
+        if updates:
+            _logger.info(f'Get {len(updates)} new updates.')
+
+            with updates_lock:
+                updates_list.update(updates)
+
+        time.sleep(CHECKING_TIMEOUT)
+
+except KeyboardInterrupt:
+    _logger.info('Catch KeyboardInterrupt. Quit.')
+    redis_client.close()
+    exit(0)

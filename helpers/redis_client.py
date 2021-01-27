@@ -38,5 +38,8 @@ class RedisClient:
     def clear(self):
         self._server.flushdb()
 
-    def __del__(self):
+    def close(self):
         self._server.close()
+
+    def __del__(self):
+        self.close()
