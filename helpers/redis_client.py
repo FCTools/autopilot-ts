@@ -11,6 +11,10 @@ import os
 
 
 class RedisClient:
+    """
+    Client for redis with basic functionality.
+    """
+
     def __init__(self):
         self._redis_port = os.getenv('REDIS_PORT')
         self._redis_host = os.getenv('REDIS_HOST')
@@ -18,6 +22,13 @@ class RedisClient:
         self._server = redis.Redis(host=self._redis_host, port=self._redis_port)
 
     def get_updates(self):
+        """
+        Retrieve all updates from redis.
+
+        :return: Dictionary with updates, format: {'task_id': content}
+        :rtype: dict
+        """
+
         keys = self._server.keys()
         updates = {}
 

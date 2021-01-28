@@ -8,11 +8,43 @@
 
 
 class TrafficSourceClient:
+    """
+    Base class for traffic source clients.
+    """
+
     def __init__(self):
         pass
 
     def change_campaign_status(self, campaign_id, api_key, status):
+        """
+        Method for play/stop campaign.
+
+        :param campaign_id: campaign id from traffic source
+        :type campaign_id: str
+        :param api_key: api key for traffic source
+        :type api_key: str
+        :param status: campaign status to set: stop/play
+        :type status: str
+
+        :return: None
+        """
+
         raise NotImplemented()
 
-    def add_zones_to_list(self, campaign_id, site_id, api_key, list_type):
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type):
+        """
+        Method for play/stop campaign.
+
+        :param campaign_id: campaign id from traffic source
+        :type campaign_id: str
+        :param zones_list: list with zones ids
+        :type zones_list: list
+        :param api_key: api key for traffic source
+        :type api_key: str
+        :param list_type: type of the list: black/white
+        :type list_type: str
+
+        :return: None
+        """
+
         raise NotImplemented()

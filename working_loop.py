@@ -53,6 +53,12 @@ def _configure_logger():
 
 
 def process():
+    """
+    Main method, listening for updates in redis and process these updates.
+
+    :return: None
+    """
+
     while True:
         with updates_lock:
             update = None

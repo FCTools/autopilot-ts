@@ -8,6 +8,7 @@
 
 from ts_clients.propeller_client import PropellerClient
 
+# actions defines
 PLAY_CAMPAIGN = 1
 STOP_CAMPAIGN = 2
 EXCLUDE_ZONE = 3

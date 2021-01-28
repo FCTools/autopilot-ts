@@ -33,7 +33,8 @@ def catch_network_errors(method):
 @catch_network_errors
 def get(session, *args, **kwargs):
     """
-    Make safe GET response using given session and arguments.
+    Make safe GET request using given session and arguments.
+
     :param session: session for response making
     :type session: requests.Session
     :return: response if success, else catch error
@@ -46,7 +47,8 @@ def get(session, *args, **kwargs):
 @catch_network_errors
 def post(session, *args, **kwargs):
     """
-    Make safe POST response using given session and arguments.
+    Make safe POST request using given session and arguments.
+
     :param session: session for response making
     :type session: requests.Session
     :return: response if success, else catch error
@@ -59,7 +61,8 @@ def post(session, *args, **kwargs):
 @catch_network_errors
 def put(session, *args, **kwargs):
     """
-    Make safe POST response using given session and arguments.
+    Make safe PUT request using given session and arguments.
+
     :param session: session for response making
     :type session: requests.Session
     :return: response if success, else catch error
