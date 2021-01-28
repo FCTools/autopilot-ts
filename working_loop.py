@@ -89,7 +89,8 @@ workers_pool = [threading.Thread(target=process, args=(), daemon=True) for _ in 
 for worker in workers_pool:
     worker.start()
 
-_logger.info('Start workers. Start listening for updates...')
+_logger.info('Start workers.')
+_logger.info('Start listening for updates...')
 
 try:
     while True:

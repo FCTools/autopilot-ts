@@ -25,7 +25,7 @@ class RedisClient:
             for key in keys:
                 updates[key] = self._server.get(key)
 
-        self.remove_keys(keys)
+            self.remove_keys(keys)
 
         return updates
 

@@ -36,6 +36,8 @@ class PropellerClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in propeller: {response}'
 
+        return 'OK'
+
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type):
         if list_type == 'black':
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/exclude/zone'
@@ -65,3 +67,5 @@ class PropellerClient(TrafficSourceClient):
                                                      "Accept": "application/json", "Content-Type": "application/json"})
             if not isinstance(response, requests.Response):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
+
+        return 'OK'

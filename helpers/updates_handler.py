@@ -27,10 +27,10 @@ class UpdatesHandler:
                 status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
                                                                        status='stop')
             elif update['action'] == EXCLUDE_ZONE:
-                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones'],
                                                                   update['api_key'], list_type='black')
             elif update['action'] == INCLUDE_ZONE:
-                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones_list'],
+                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones'],
                                                                   update['api_key'], list_type='white')
             else:
                 return f"Unknown action: {update['action']}"
