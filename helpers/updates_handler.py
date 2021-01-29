@@ -20,7 +20,7 @@ class UpdatesHandler:
         self._propeller_client = PropellerClient()
 
     def handle(self, update):
-        if update['ts'] == 'Propeller Ads':
+        if update['ts'] == "Propeller Ads":
             if update['action'] == PLAY_CAMPAIGN:
                 status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
                                                                        status='play')

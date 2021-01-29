@@ -26,6 +26,8 @@ handler = UpdatesHandler()
 # {"ts": "prop", "campaign_id": xxxxx, "api_key": xxxxxxx, "action": "start"/"stop"}
 #
 
+# TODO: add handling connection error: redis.exceptions.ConnectionError
+
 _logger = logging.getLogger(__name__)
 redis_client = RedisClient()
 
