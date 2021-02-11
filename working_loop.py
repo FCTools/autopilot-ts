@@ -66,8 +66,11 @@ def process():
             update = None
             if len(updates_list):
                 key = random.choice(list(updates_list.keys()))
-                update = json.loads(updates_list[key])
-                del(updates_list[key])
+                try:
+                    update = json.loads(updates_list[key])
+                except json.JSONDecodeError:
+                    _logger.error(f"Can't parse object: {updates_list[key]}")
+                del (updates_list[key])
 
         if update:
             _logger.info(f'Get new update: {key}')
