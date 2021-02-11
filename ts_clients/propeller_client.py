@@ -54,14 +54,16 @@ class PropellerClient(TrafficSourceClient):
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
 
         current_zones_list = set(response.json()['zone'])
+        zones_to_add = set()
         start_len = len(current_zones_list)
 
         for zone in zones_list:
-            current_zones_list.add(zone)
+            if zone not in current_zones_list:
+                zones_to_add.add(zone)
 
         if len(current_zones_list) != start_len:
             response = requests_manager.put(requests.Session(), requests_url,
-                                            data=json.dumps({"zone": list(current_zones_list)}),
+                                            data=json.dumps({"zone": list(zones_to_add)}),
                                             params={'campaignId': str(campaign_id)},
                                             headers={"Authorization": f"Bearer {api_key}",
                                                      "Accept": "application/json", "Content-Type": "application/json"})
