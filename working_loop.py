@@ -9,10 +9,10 @@
 import json
 import logging
 import os
+import platform
 import random
 import threading
 import time
-import platform
 
 from helpers.redis_client import RedisClient
 from helpers.updates_handler import UpdatesHandler

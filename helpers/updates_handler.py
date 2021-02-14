@@ -6,6 +6,7 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
+from ts_clients.evadav_client import EvadavClient
 from ts_clients.propeller_client import PropellerClient
 
 # actions defines
@@ -18,24 +19,29 @@ INCLUDE_ZONE = 4
 class UpdatesHandler:
     def __init__(self):
         self._propeller_client = PropellerClient()
+        self._evadav_client = EvadavClient()
 
     def handle(self, update):
         if update['ts'] == "Propeller Ads":
-            if update['action'] == PLAY_CAMPAIGN:
-                status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
-                                                                       status='play')
-            elif update['action'] == STOP_CAMPAIGN:
-                status = self._propeller_client.change_campaign_status(update['campaign_id'], update['api_key'],
-                                                                       status='stop')
-            elif update['action'] == EXCLUDE_ZONE:
-                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                                  update['api_key'], list_type='black')
-            elif update['action'] == INCLUDE_ZONE:
-                status = self._propeller_client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                                  update['api_key'], list_type='white')
-            else:
-                return f"Unknown action: {update['action']}"
+            client = self._propeller_client
+        elif update['ts'] == 'Evadav':
+            client = self._evadav_client
         else:
             return f"Unknown traffic source: {update['ts']}"
+
+        if update['action'] == PLAY_CAMPAIGN:
+            status = client.change_campaign_status(update['campaign_id'], update['api_key'],
+                                                   status='play')
+        elif update['action'] == STOP_CAMPAIGN:
+            status = client.change_campaign_status(update['campaign_id'], update['api_key'],
+                                                   status='stop')
+        elif update['action'] == EXCLUDE_ZONE:
+            status = client.add_zones_to_list(update['campaign_id'], update['zones'],
+                                              update['api_key'], list_type='black')
+        elif update['action'] == INCLUDE_ZONE:
+            status = client.add_zones_to_list(update['campaign_id'], update['zones'],
+                                              update['api_key'], list_type='white')
+        else:
+            return f"Unknown action: {update['action']}"
 
         return status

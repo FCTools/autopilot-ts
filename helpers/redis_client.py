@@ -6,8 +6,9 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
-import redis
 import os
+
+import redis
 
 
 class RedisClient:
