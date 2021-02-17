@@ -55,13 +55,12 @@ class PropellerClient(TrafficSourceClient):
 
         current_zones_list = set(response.json()['zone'])
         zones_to_add = set()
-        start_len = len(current_zones_list)
 
         for zone in zones_list:
             if zone not in current_zones_list:
                 zones_to_add.add(zone)
 
-        if len(current_zones_list) != start_len:
+        if len(zones_to_add) != 0:
             response = requests_manager.put(requests.Session(), requests_url,
                                             data=json.dumps({"zone": list(zones_to_add)}),
                                             params={'campaignId': str(campaign_id)},
