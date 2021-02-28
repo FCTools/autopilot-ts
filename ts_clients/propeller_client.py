@@ -53,7 +53,11 @@ class PropellerClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
 
-        current_zones_list = set(response.json()['zone'])
+        try:
+            current_zones_list = set(response.json()['zone'])
+        except json.decoder.JSONDecodeError as error:
+            return f'Json decode error: {error.doc}'
+
         zones_to_add = set()
 
         for zone in zones_list:
