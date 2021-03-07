@@ -38,7 +38,7 @@ class PropellerClient(TrafficSourceClient):
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type):
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None):
         if list_type == 'black':
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/exclude/zone'
         elif list_type == 'white':

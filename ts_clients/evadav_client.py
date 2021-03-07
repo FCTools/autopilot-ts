@@ -5,6 +5,7 @@
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
+import json
 
 import requests
 
@@ -33,9 +34,22 @@ class EvadavClient(TrafficSourceClient):
                                                  "Content-Type": "application/json"})
 
         if not isinstance(response, requests.Response):
-            return f'Error occurred while trying to change campaign status in propeller: {response}'
+            return f'Error occurred while trying to change campaign status in evadav: {response}'
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type):
-        raise NotImplemented()
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
+                          list_to_add=None):
+        requests_url = self._base_requests_url + '/advertiser/sources/add'
+
+        response = requests_manager.post(requests.Session(), requests_url,
+                                         params={"access-token": api_key},
+                                         headers={"Accept": "application/json",
+                                                  "Content-Type": "application/json"},
+                                         data=json.dumps({"audience": list_to_add,  # check this
+                                                          "sources": list(zones_list)}))
+
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to add zones to audience in evadav: {response}'
+
+        return 'OK'
