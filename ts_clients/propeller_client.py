@@ -36,6 +36,10 @@ class PropellerClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in propeller: {response}'
 
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to ' \
+                   f'change campaign status in propeller: {response.content}'
+
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None):
@@ -52,6 +56,9 @@ class PropellerClient(TrafficSourceClient):
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
+
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to get campaign {list_type} list: {response.content}'
 
         try:
             current_zones_list = set(response.json()['zone'])
@@ -72,5 +79,8 @@ class PropellerClient(TrafficSourceClient):
                                                      "Accept": "application/json", "Content-Type": "application/json"})
             if not isinstance(response, requests.Response):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
+            if response.status_code != 200:
+                return f'Non-success status code occurred while trying to ' \
+                       f'add zones to list in propeller: {response.content}'
 
         return 'OK'

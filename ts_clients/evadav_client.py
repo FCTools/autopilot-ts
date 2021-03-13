@@ -36,6 +36,9 @@ class EvadavClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to change status in evadav: {response.content}'
+
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
@@ -51,5 +54,9 @@ class EvadavClient(TrafficSourceClient):
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to add zones to audience in evadav: {response}'
+
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to ' \
+                   f'add zones to audience in evadav: {response.content}'
 
         return 'OK'
