@@ -5,6 +5,7 @@
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
+
 import json
 
 import requests
@@ -37,7 +38,9 @@ class EvadavClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
         if response.status_code != 200:
-            return f'Non-success status code occurred while trying to change status in evadav: {response.content}'
+            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
+
+        print(response.text)
 
         return 'OK'
 
@@ -58,5 +61,7 @@ class EvadavClient(TrafficSourceClient):
         if response.status_code != 200:
             return f'Non-success status code occurred while trying to ' \
                    f'add zones to audience in evadav: {response.content}'
+
+        print(response.text)
 
         return 'OK'
