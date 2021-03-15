@@ -22,6 +22,18 @@ class RedisClient:
 
         self._server = redis.Redis(host=self._redis_host, port=self._redis_port)
 
+    @staticmethod
+    def _remove_duplicates(dict_):
+        res = dict()
+        tmp = []
+
+        for key, val in dict_.items():
+            if val not in tmp:
+                tmp.append(val)
+                res[key] = val
+
+        return res
+
     def get_updates(self):
         """
         Retrieve all updates from redis.
@@ -39,7 +51,7 @@ class RedisClient:
 
             self.remove_keys(keys)
 
-        return updates
+        return self._remove_duplicates(updates)
 
     def append(self, key, value):
         self._server.append(key, value)

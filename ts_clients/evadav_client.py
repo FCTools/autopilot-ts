@@ -20,6 +20,31 @@ class EvadavClient(TrafficSourceClient):
 
         super().__init__()
 
+    def _get_campaign_status(self, campaign_id, api_key):
+        requests_url = self._base_requests_url + '/advertiser/campaigns/get'
+
+        response = requests_manager.get(requests.Session(), requests_url,
+                                        params={"access-token": api_key,
+                                                "id": campaign_id},
+                                        headers={"Accept": "application/json",
+                                                 "Content-Type": "application/json"})
+
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to change campaign status in evadav: {response}'
+
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
+
+        try:
+            response = response.json()
+
+            if response['success']:
+                return response['data']['campaign']['status']
+            else:
+                return 'error'
+        except:
+            return 'error'
+
     def change_campaign_status(self, campaign_id, api_key, status):
         if status == 'stop':
             requests_url = self._base_requests_url + '/advertiser/campaigns/stop'
@@ -27,6 +52,15 @@ class EvadavClient(TrafficSourceClient):
             requests_url = self._base_requests_url + '/advertiser/campaigns/activate'
         else:
             return f'Incorrect status given: {status}'
+
+        campaign_status = self._get_campaign_status(campaign_id, api_key)
+        if campaign_status == 'error':
+            return f"Can't get current campaign status: {campaign_id}"
+
+        if status == 'stop' and campaign_status == 'stopped':
+            return 'OK'
+        if status == 'play' and campaign_status == 'active':
+            return 'OK'
 
         response = requests_manager.post(requests.Session(), requests_url,
                                          params={"access-token": api_key,
