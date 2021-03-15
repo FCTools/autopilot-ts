@@ -28,11 +28,11 @@ class EvadavClient(TrafficSourceClient):
         else:
             return f'Incorrect status given: {status}'
 
-        response = requests_manager.put(requests.Session(), requests_url,
-                                        params={"access-token": api_key,
-                                                "id": campaign_id},
-                                        headers={"Accept": "application/json",
-                                                 "Content-Type": "application/json"})
+        response = requests_manager.post(requests.Session(), requests_url,
+                                         params={"access-token": api_key,
+                                                 "id": campaign_id},
+                                         headers={"Accept": "application/json",
+                                                  "Content-Type": "application/json"})
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
