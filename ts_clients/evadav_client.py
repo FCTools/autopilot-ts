@@ -45,7 +45,7 @@ class EvadavClient(TrafficSourceClient):
         except:
             return 'error'
 
-    def change_campaign_status(self, campaign_id, api_key, status):
+    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         if status == 'stop':
             requests_url = self._base_requests_url + '/advertiser/campaigns/stop'
         elif status == 'play':

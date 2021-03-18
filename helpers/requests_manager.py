@@ -70,3 +70,17 @@ def put(session, *args, **kwargs):
     """
 
     return session.put(*args, **kwargs)
+
+
+@catch_network_errors
+def patch(session, *args, **kwargs):
+    """
+    Make safe PATCH request using given session and arguments.
+
+    :param session: session for response making
+    :type session: requests.Session
+    :return: response if success, else catch error
+    :rtype: Union[requests.Response, Exception]
+    """
+
+    return session.patch(*args, **kwargs)

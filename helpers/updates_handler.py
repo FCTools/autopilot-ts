@@ -7,6 +7,7 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 from ts_clients.evadav_client import EvadavClient
+from ts_clients.mgid_client import MGIDClient
 from ts_clients.propeller_client import PropellerClient
 
 # actions defines
@@ -20,12 +21,15 @@ class UpdatesHandler:
     def __init__(self):
         self._propeller_client = PropellerClient()
         self._evadav_client = EvadavClient()
+        self._mgid_client = MGIDClient()
 
     def handle(self, update):
         if update['ts'] == "Propeller Ads":
             client = self._propeller_client
         elif update['ts'] == 'Evadav':
             client = self._evadav_client
+        elif update['ts'] == 'MGID':
+            client = self._mgid_client
         else:
             return f"Unknown traffic source: {update['ts']}"
 

@@ -15,10 +15,12 @@ class TrafficSourceClient:
     def __init__(self):
         pass
 
-    def change_campaign_status(self, campaign_id, api_key, status):
+    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         """
         Method for play/stop campaign.
 
+        :param client_key: client id
+        :type client_key: int
         :param campaign_id: campaign id from traffic source
         :type campaign_id: str
         :param api_key: api key for traffic source
