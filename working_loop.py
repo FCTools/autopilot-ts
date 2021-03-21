@@ -22,10 +22,6 @@ updates_lock = threading.Lock()
 redis_lock = threading.Lock()
 handler = UpdatesHandler()
 
-# update format:
-# {"ts": "prop", "campaign_id": xxxxx, "api_key": xxxxxxx, "action": "start"/"stop"}
-#
-
 # TODO: add handling connection error: redis.exceptions.ConnectionError
 
 _logger = logging.getLogger(__name__)

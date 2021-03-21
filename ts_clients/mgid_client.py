@@ -6,14 +6,16 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
-from ts_clients.base_client import TrafficSourceClient
-from helpers import requests_manager
 import requests
+
+from helpers import requests_manager
+from helpers.consts import *
+from ts_clients.base_client import TrafficSourceClient
 
 
 class MGIDClient(TrafficSourceClient):
     def __init__(self):
-        self._base_requests_url = 'https://api.mgid.com/v1/goodhits/clients/'
+        self._base_requests_url = MGID_URL
 
         super().__init__()
 
@@ -22,7 +24,7 @@ class MGIDClient(TrafficSourceClient):
 
         params = {
             'token': api_key,
-            'whetherToBlockByClient': 1 if status == 'stop' else 0
+            'whetherToBlockByClient': 1 if status == STOP else 0
         }
 
         response = requests_manager.patch(requests.Session(), requests_url, params=params)

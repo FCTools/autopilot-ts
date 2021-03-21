@@ -11,19 +11,20 @@ import json
 import requests
 
 from helpers import requests_manager
+from helpers.consts import *
 from ts_clients.base_client import TrafficSourceClient
 
 
 class PropellerClient(TrafficSourceClient):
     def __init__(self):
-        self._base_requests_url = 'https://ssp-api.propellerads.com/v5/adv/'
+        self._base_requests_url = PROPELLER_URL
 
         super().__init__()
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
-        if status == 'stop':
+        if status == STOP:
             requests_url = self._base_requests_url + 'campaigns/stop'
-        elif status == 'play':
+        elif status == PLAY:
             requests_url = self._base_requests_url + 'campaigns/play'
         else:
             return f'Incorrect status given: {status}'
@@ -43,9 +44,9 @@ class PropellerClient(TrafficSourceClient):
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None):
-        if list_type == 'black':
+        if list_type == BLACKLIST:
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/exclude/zone'
-        elif list_type == 'white':
+        elif list_type == WHITELIST:
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/include/zone'
         else:
             return
@@ -77,8 +78,10 @@ class PropellerClient(TrafficSourceClient):
                                             params={'campaignId': str(campaign_id)},
                                             headers={"Authorization": f"Bearer {api_key}",
                                                      "Accept": "application/json", "Content-Type": "application/json"})
+
             if not isinstance(response, requests.Response):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
+
             if response.status_code != 200:
                 return f'Non-success status code occurred while trying to ' \
                        f'add zones to list in propeller: {response.content}'

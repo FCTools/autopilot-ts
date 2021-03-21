@@ -6,15 +6,17 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
+import logging
+
+from pydantic import ValidationError
+
+from helpers.consts import *
 from ts_clients.evadav_client import EvadavClient
 from ts_clients.mgid_client import MGIDClient
 from ts_clients.propeller_client import PropellerClient
+from ts_clients.update import Update
 
-# actions defines
-PLAY_CAMPAIGN = 1
-STOP_CAMPAIGN = 2
-EXCLUDE_ZONE = 3
-INCLUDE_ZONE = 4
+_logger = logging.getLogger(__name__)
 
 
 class UpdatesHandler:
@@ -24,37 +26,44 @@ class UpdatesHandler:
         self._mgid_client = MGIDClient()
 
     def handle(self, update):
-        if update['ts'] == "Propeller Ads":
+        status = None
+
+        try:
+            update = Update(**update)
+        except ValidationError:
+            return f'Incorrect update: {update}'
+
+        if update.ts == PROPELLER_ADS:
             client = self._propeller_client
-        elif update['ts'] == 'Evadav':
+        elif update.ts == EVADAV:
             client = self._evadav_client
-        elif update['ts'] == 'MGID':
+        elif update.ts == MGID:
             client = self._mgid_client
         else:
-            return f"Unknown traffic source: {update['ts']}"
+            return f"Unknown traffic source: {update.ts}"
 
-        if update['action'] == PLAY_CAMPAIGN:
-            status = client.change_campaign_status(update['campaign_id'], update['api_key'],
-                                                   status='play')
-        elif update['action'] == STOP_CAMPAIGN:
-            status = client.change_campaign_status(update['campaign_id'], update['api_key'],
-                                                   status='stop')
-        elif update['action'] == EXCLUDE_ZONE:
+        if update.action == PLAY_CAMPAIGN:
+            status = client.change_campaign_status(update.campaign_id, update.api_key,
+                                                   status=PLAY)
+        elif update.action == STOP_CAMPAIGN:
+            status = client.change_campaign_status(update.campaign_id, update.api_key,
+                                                   status=STOP)
+        elif update.action == EXCLUDE_ZONE:
             if isinstance(client, PropellerClient):
-                status = client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                  update['api_key'], list_type='black')
+                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                                                  update.api_key, list_type=BLACKLIST)
             elif isinstance(client, EvadavClient):
-                status = client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                  update['api_key'], list_to_add=update['list'])
+                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                                                  update.api_key, list_to_add=update.list)
 
-        elif update['action'] == INCLUDE_ZONE:
+        elif update.action == INCLUDE_ZONE:
             if isinstance(client, PropellerClient):
-                status = client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                  update['api_key'], list_type='white')
+                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                                                  update.api_key, list_type=WHITELIST)
             elif isinstance(client, EvadavClient):
-                status = client.add_zones_to_list(update['campaign_id'], update['zones'],
-                                                  update['api_key'], list_to_add=update['list'])
+                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                                                  update.api_key, list_to_add=update.list)
         else:
-            return f"Unknown action: {update['action']}"
+            return f"Unknown action: {update.action}"
 
         return status
