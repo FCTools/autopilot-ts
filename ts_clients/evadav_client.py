@@ -78,7 +78,7 @@ class EvadavClient(TrafficSourceClient):
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None):
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + '/advertiser/sources/add'
 
         response = requests_manager.post(requests_url,

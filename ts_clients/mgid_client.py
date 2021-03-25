@@ -27,7 +27,7 @@ class MGIDClient(TrafficSourceClient):
             'whetherToBlockByClient': 1 if status == STOP else 0
         }
 
-        response = requests_manager.patch(requests.Session(), requests_url, params=params)
+        response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in mgid: {response}'
@@ -39,5 +39,25 @@ class MGIDClient(TrafficSourceClient):
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
-                          list_to_add=None):
-        raise NotImplemented()
+                          list_to_add=None, client_key=None):
+        requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}'
+
+        editing_method = 'include' if list_type == WHITELIST else 'exclude'
+        filter_type = 'only'
+        zones = ','.join(zones_list)
+
+        params = {
+            'token': api_key,
+            'widgetsFilterUid': f'{editing_method}, {filter_type}, {zones}'
+        }
+
+        response = requests_manager.patch(requests_url, params=params)
+
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to add zones to audience in mgid: {response}'
+
+        if response.status_code != 200:
+            return f'Non-success status code occurred while trying to ' \
+                   f'add zones to audience in mdid: {response.content}'
+
+        return 'OK'
