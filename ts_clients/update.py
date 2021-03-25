@@ -18,3 +18,4 @@ class Update(BaseModel):
     campaign_id: str  # campaign id from traffic source
     zones: Optional[List[str]]  # zones list
     list: Optional[str]  # audience (e.g. Evadav)
+    client_id: Optional[str]  # client id for mgid

@@ -20,7 +20,7 @@ class TrafficSourceClient:
         Method for play/stop campaign.
 
         :param client_key: client id
-        :type client_key: int
+        :type client_key: Optional[str]
         :param campaign_id: campaign id from traffic source
         :type campaign_id: str
         :param api_key: api key for traffic source
@@ -49,7 +49,7 @@ class TrafficSourceClient:
         :param list_to_add: list to add (e.g. audience for evadav)
         :type list_type: str
         :param client_key: client id
-        :type client_key:str
+        :type client_key: Optional[str]
 
         :return: None
         """

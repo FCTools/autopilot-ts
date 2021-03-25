@@ -21,10 +21,8 @@ _logger = logging.getLogger(__name__)
 
 class UpdatesHandler:
     def __init__(self):
-        self._propeller_client = PropellerClient()
-        self._evadav_client = EvadavClient()
-        self._mgid_client = MGIDClient()
-
+        pass
+    
     def handle(self, update):
         status = None
 
@@ -34,35 +32,32 @@ class UpdatesHandler:
             return f'Incorrect update: {update}'
 
         if update.ts == PROPELLER_ADS:
-            client = self._propeller_client
+            client = PropellerClient()
         elif update.ts == EVADAV:
-            client = self._evadav_client
+            client = EvadavClient()
         elif update.ts == MGID:
-            client = self._mgid_client
+            client = MGIDClient()
         else:
             return f"Unknown traffic source: {update.ts}"
 
         if update.action == PLAY_CAMPAIGN:
             status = client.change_campaign_status(update.campaign_id, update.api_key,
-                                                   status=PLAY)
+                                                   status=PLAY, client_key=update.client_id)
         elif update.action == STOP_CAMPAIGN:
             status = client.change_campaign_status(update.campaign_id, update.api_key,
-                                                   status=STOP)
-        elif update.action == EXCLUDE_ZONE:
-            if isinstance(client, PropellerClient):
-                status = client.add_zones_to_list(update.campaign_id, update.zones,
-                                                  update.api_key, list_type=BLACKLIST)
-            elif isinstance(client, EvadavClient):
-                status = client.add_zones_to_list(update.campaign_id, update.zones,
-                                                  update.api_key, list_to_add=update.list)
+                                                   status=STOP, client_key=update.client_id)
+        elif update.action == EXCLUDE_ZONE or update.action == INCLUDE_ZONE:
+            list_ = BLACKLIST if update.action == EXCLUDE_ZONE else WHITELIST
 
-        elif update.action == INCLUDE_ZONE:
             if isinstance(client, PropellerClient):
                 status = client.add_zones_to_list(update.campaign_id, update.zones,
-                                                  update.api_key, list_type=WHITELIST)
+                                                  update.api_key, list_type=list_)
             elif isinstance(client, EvadavClient):
                 status = client.add_zones_to_list(update.campaign_id, update.zones,
                                                   update.api_key, list_to_add=update.list)
+            elif isinstance(client, MGIDClient):
+                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                                                  update.api_key, list_type=list_, client_key=update.client_id)
         else:
             return f"Unknown action: {update.action}"
 
