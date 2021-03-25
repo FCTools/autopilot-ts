@@ -29,7 +29,7 @@ class PropellerClient(TrafficSourceClient):
         else:
             return f'Incorrect status given: {status}'
 
-        response = requests_manager.put(requests.Session(), requests_url,
+        response = requests_manager.put(requests_url,
                                         data=json.dumps({"campaign_ids": [int(campaign_id)]}),
                                         headers={"Authorization": f"Bearer {api_key}",
                                                  "Accept": "application/json", "Content-Type": "application/json"})
@@ -43,7 +43,7 @@ class PropellerClient(TrafficSourceClient):
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None):
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         if list_type == BLACKLIST:
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/exclude/zone'
         elif list_type == WHITELIST:
@@ -51,7 +51,7 @@ class PropellerClient(TrafficSourceClient):
         else:
             return
 
-        response = requests_manager.get(requests.Session(), requests_url, params={'campaignId': str(campaign_id)},
+        response = requests_manager.get(requests_url, params={'campaignId': str(campaign_id)},
                                         headers={"Authorization": f"Bearer {api_key}",
                                                  "Accept": "application/json", "Content-Type": "application/json"})
 

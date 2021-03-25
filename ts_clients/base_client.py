@@ -34,7 +34,7 @@ class TrafficSourceClient:
         raise NotImplemented()
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
-                          list_to_add=None):
+                          list_to_add=None, client_key=None):
         """
         Method for play/stop campaign.
 
@@ -48,6 +48,8 @@ class TrafficSourceClient:
         :type list_type: str
         :param list_to_add: list to add (e.g. audience for evadav)
         :type list_type: str
+        :param client_key: client id
+        :type client_key:str
 
         :return: None
         """
