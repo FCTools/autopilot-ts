@@ -19,8 +19,8 @@ class MGIDClient(TrafficSourceClient):
 
         super().__init__()
 
-    def change_campaign_status(self, campaign_id, api_key, status, client_id=None):
-        requests_url = self._base_requests_url + f'{client_id}/campaigns/{campaign_id}/'
+    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
+        requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}/'
 
         params = {
             'token': api_key,
