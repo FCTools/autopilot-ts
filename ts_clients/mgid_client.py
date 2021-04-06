@@ -47,9 +47,10 @@ class MGIDClient(TrafficSourceClient):
         zones = ','.join(zones_list)
 
         params = {
-            'token': api_key,
-            'widgetsFilterUid': f'{editing_method}, {filter_type}, {zones}'
+            'token': api_key
         }
+
+        requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
 
         print(params)
 
