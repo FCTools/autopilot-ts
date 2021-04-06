@@ -43,7 +43,7 @@ class MGIDClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}'
 
         editing_method = 'include' if list_type == WHITELIST else 'exclude'
-        filter_type = 'only'
+        filter_type = 'off'  # test
         zones = ','.join(zones_list)
 
         params = {
