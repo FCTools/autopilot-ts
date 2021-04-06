@@ -44,7 +44,7 @@ class MGIDClient(TrafficSourceClient):
 
         editing_method = 'include' if list_type == WHITELIST else 'exclude'
         filter_type = 'only'
-        zones = ','.join(zones_list)
+        zones = ','.join([f'"{zone}"' for zone in zones_list])
 
         params = {
             'token': api_key,
