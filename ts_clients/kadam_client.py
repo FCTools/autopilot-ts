@@ -6,7 +6,6 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 import json
-
 import requests
 
 from helpers import requests_manager
