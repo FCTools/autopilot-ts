@@ -5,6 +5,7 @@
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
+import json
 
 import requests
 
@@ -22,20 +23,16 @@ class KadamClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_id=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
-        params = {
-            'token': api_key,
-            'campaign_id': campaign_id,
-            'status': 0 if status == STOP else 1
-        }
-
-        response = requests_manager.patch(requests.Session(), requests_url, params=params)
+        response = requests_manager.patch(requests.Session(), requests_url,
+                                          data=json.dumps({'data': [{'campaign_id': campaign_id,
+                                                           'status': 0 if status == STOP else 1}]}))
 
         if not isinstance(response, requests.Response):
-            return f'Error occurred while trying to change campaign status in mgid: {response}'
+            return f'Error occurred while trying to change campaign status in kadam: {response}'
 
         if response.status_code != 200:
             return f'Non-success status code occurred while trying to ' \
-                   f'change campaign status in mgid: {response.content}'
+                   f'change campaign status in kadam: {response.content}'
 
         return 'OK'
 
