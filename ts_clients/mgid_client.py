@@ -51,6 +51,8 @@ class MGIDClient(TrafficSourceClient):
             'widgetsFilterUid': f'{editing_method}, {filter_type}, {zones}'
         }
 
+        print(params)
+
         response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
