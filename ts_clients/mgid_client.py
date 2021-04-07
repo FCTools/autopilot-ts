@@ -50,7 +50,7 @@ class MGIDClient(TrafficSourceClient):
             'token': api_key
         }
 
-        requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
+        requests_url += f'?widgetsFilterUid={editing_method}, {zones}'
 
         print(params)
 
