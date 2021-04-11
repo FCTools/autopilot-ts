@@ -22,7 +22,7 @@ class KadamClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_id=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
-        response = requests_manager.patch(requests.Session(), requests_url,
+        response = requests_manager.patch(requests_url,
                                           data=json.dumps({'data': [{'campaign_id': campaign_id,
                                                            'status': 0 if status == STOP else 1}]}))
 
@@ -36,16 +36,16 @@ class KadamClient(TrafficSourceClient):
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
-                          list_to_add=None):
+                          list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         if list_type == BLACKLIST:
-            response = requests_manager.patch(requests.Session(), requests_url,
+            response = requests_manager.patch(requests_url,
                                               data=json.dumps({'data': [{'campaign_id': campaign_id,
                                                                          'black_list': zones_list}]}))
 
         if list_type == WHITELIST:
-            response = requests_manager.patch(requests.Session(), requests_url,
+            response = requests_manager.patch(requests_url,
                                               data=json.dumps({'data': [{'campaign_id': campaign_id,
                                                                          'white_list': zones_list}]}))
 
