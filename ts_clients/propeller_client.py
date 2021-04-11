@@ -73,13 +73,11 @@ class PropellerClient(TrafficSourceClient):
                 zones_to_add.add(zone)
 
         if len(zones_to_add) != 0:
-            print(zones_to_add)
             response = requests_manager.put(requests_url,
-                                            data=json.dumps({"zone": list(zones_to_add)}),
+                                            data=json.dumps({"zone": list(current_zones_list)}),
                                             params={'campaignId': str(campaign_id)},
                                             headers={"Authorization": f"Bearer {api_key}",
                                                      "Accept": "application/json", "Content-Type": "application/json"})
-            print(response)
 
             if not isinstance(response, requests.Response):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
