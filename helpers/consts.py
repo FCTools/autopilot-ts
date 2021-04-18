@@ -10,6 +10,7 @@
 PROPELLER_ADS = 'Propeller Ads'
 EVADAV = 'Evadav'
 MGID = 'MGID'
+VIMMY = 'Vimmy'
 
 # campaign statuses
 PLAY = 'play'
@@ -29,3 +30,4 @@ INCLUDE_ZONE = 4
 EVADAV_URL = 'https://evadav.com/api/v2.0'
 MGID_URL = 'https://api.mgid.com/v1/goodhits/clients/'
 PROPELLER_URL = 'https://ssp-api.propellerads.com/v5/adv/'
+VIMMY_URL = 'https://api.vimmy.com/v1/advertisers/'
