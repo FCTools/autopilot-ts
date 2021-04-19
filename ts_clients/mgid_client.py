@@ -22,6 +22,8 @@ class MGIDClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}/'
 
+        print(campaign_id, api_key, client_key, status)
+
         params = {
             'token': api_key,
             'whetherToBlockByClient': 1 if status == STOP else 0
