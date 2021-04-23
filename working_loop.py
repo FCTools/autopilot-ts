@@ -81,8 +81,8 @@ def process():
                 _logger.error(f"Can't handle update {key}: {status}")
                 time.sleep(10)
 
-                with redis_lock:
-                    redis_client.append(key, json.dumps(update))
+                # with redis_lock:
+                #     redis_client.append(key, json.dumps(update))
 
         time.sleep(5)
 

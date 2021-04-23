@@ -40,8 +40,6 @@ class UpdatesHandler:
         else:
             return f"Unknown traffic source: {update.ts}"
 
-        print(update.json())
-
         if update.action == PLAY_CAMPAIGN:
             status = client.change_campaign_status(update.campaign_id, update.api_key,
                                                    status=PLAY, client_key=update.client_id)
