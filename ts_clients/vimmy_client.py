@@ -21,6 +21,8 @@ class VimmyClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}?api_key={api_key}'
 
+        response = requests_manager.get
+
         response = requests_manager.put(requests.Session(), requests_url,
                                         data=json.dumps({'status': 0 if status == STOP else 1}))
 
