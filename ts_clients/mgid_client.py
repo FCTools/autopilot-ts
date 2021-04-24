@@ -45,16 +45,16 @@ class MGIDClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}'
 
         editing_method = 'include' if list_type == WHITELIST else 'exclude'
-        filter_type = 'only'  # test
+        filter_type = 'off'  # test
         zones = ','.join(zones_list)
 
         params = {
             'token': api_key
         }
 
-        requests_url += f'?widgetsFilterUid="{editing_method}, {filter_type}, {zones}"'
+        requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
 
-        print(params)
+        print(requests_url)
 
         response = requests_manager.patch(requests_url, params=params)
 
