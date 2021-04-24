@@ -11,6 +11,7 @@ PROPELLER_ADS = 'Propeller Ads'
 EVADAV = 'Evadav'
 MGID = 'MGID'
 VIMMY = 'Vimmy'
+KADAM = 'Kadam'
 
 # campaign statuses
 PLAY = 'play'
@@ -31,3 +32,5 @@ EVADAV_URL = 'https://evadav.com/api/v2.0'
 MGID_URL = 'https://api.mgid.com/v1/goodhits/clients/'
 PROPELLER_URL = 'https://ssp-api.propellerads.com/v5/adv/'
 VIMMY_URL = 'https://api.vimmy.com/v1/advertisers/'
+KADAM_URL = 'http://api.kadam.net/'
+
