@@ -22,6 +22,8 @@ class MGIDClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}/'
 
+        print(campaign_id, api_key, client_key, status)
+
         params = {
             'token': api_key,
             'whetherToBlockByClient': 1 if status == STOP else 0
@@ -49,10 +51,13 @@ class MGIDClient(TrafficSourceClient):
         params = {
             'token': api_key
         }
+        requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
+        response = requests.patch(requests_url_tmp, params=params)
+        print(response.text)
 
         requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
 
-        print(params)
+        print(requests_url)
 
         response = requests_manager.patch(requests_url, params=params)
 
