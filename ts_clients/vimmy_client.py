@@ -19,12 +19,22 @@ class VimmyClient(TrafficSourceClient):
         super().__init__()
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
-        requests_url = self._base_requests_url + f'campaigns/{campaign_id}?api_key={api_key}'
+        requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
 
-        response = requests_manager.get
+        get_response = requests_manager.get(requests_url, api_key=api_key)
 
-        response = requests_manager.put(requests.Session(), requests_url,
-                                        data=json.dumps({'status': 0 if status == STOP else 1}))
+        if not isinstance(get_response, requests.Response):
+            return f'Error occurred while trying to change campaign status in Vimmy: {get_response}'
+
+        if get_response.status_code != 200:
+            return f'Non-success status code occurred while trying to ' \
+                   f'change campaign status in Vimmy: {get_response.content}'
+
+        campaign_data = get_response.json()
+        campaign_data['status'] = 0 if status == STOP else 1
+
+        response = requests_manager.put(requests_url,
+                                        data=json.dumps(campaign_data))
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
@@ -37,4 +47,4 @@ class VimmyClient(TrafficSourceClient):
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
         list_to_add=None, client_key=None):
-        NotImplemented
+       NotImplemented
