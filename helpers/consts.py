@@ -13,6 +13,9 @@ MGID = 'MGID'
 VIMMY = 'Vimmy'
 KADAM = 'Kadam'
 
+# HTTP success code
+HTTP_200_SUCCESS = 200
+
 # campaign statuses
 PLAY = 'play'
 STOP = 'stop'

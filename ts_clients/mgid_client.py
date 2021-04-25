@@ -22,8 +22,6 @@ class MGIDClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}/'
 
-        print(campaign_id, api_key, client_key, status)
-
         params = {
             'token': api_key,
             'whetherToBlockByClient': 1 if status == STOP else 0
@@ -34,7 +32,7 @@ class MGIDClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in mgid: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in mgid: {response.content}'
 
@@ -45,7 +43,7 @@ class MGIDClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}'
 
         editing_method = 'include' if list_type == WHITELIST else 'exclude'
-        filter_type = 'off'  # test
+        filter_type = 'off'
         zones = ','.join(zones_list)
 
         params = {
@@ -53,21 +51,16 @@ class MGIDClient(TrafficSourceClient):
         }
         requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
         response = requests.patch(requests_url_tmp, params=params)
-        print(response.text)
 
         requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
-
-        print(requests_url)
 
         response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
-                   f'add zones to audience in mdid: {response.content}'
-
-        print(response.text)
+                   f'add zones to audience in mgid: {response.content}'
 
         return 'OK'

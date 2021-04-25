@@ -29,14 +29,13 @@ class KadamClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
-                          list_to_add=None, client_key=None):
+    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         if list_type == BLACKLIST:
@@ -48,11 +47,13 @@ class KadamClient(TrafficSourceClient):
             response = requests_manager.patch(requests_url,
                                               data=json.dumps({'data': [{'campaign_id': campaign_id,
                                                                          'white_list': zones_list}]}))
+        else:
+            return f'Incorrect list type: {list_type}'
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 

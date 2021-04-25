@@ -37,7 +37,7 @@ class PropellerClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in propeller: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in propeller: {response.content}'
 
@@ -49,7 +49,7 @@ class PropellerClient(TrafficSourceClient):
         elif list_type == WHITELIST:
             requests_url = self._base_requests_url + f'campaigns/{campaign_id}/targeting/include/zone'
         else:
-            return
+            return f'Incorrect list in propeller: {list_type}'
 
         response = requests_manager.get(requests_url, params={'campaignId': str(campaign_id)},
                                         headers={"Authorization": f"Bearer {api_key}",
@@ -58,7 +58,7 @@ class PropellerClient(TrafficSourceClient):
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
 
-        if response.status_code != 200:
+        if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to get campaign {list_type} list: {response.content}'
 
         try:
@@ -82,7 +82,7 @@ class PropellerClient(TrafficSourceClient):
             if not isinstance(response, requests.Response):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
 
-            if response.status_code != 200:
+            if response.status_code != HTTP_200_SUCCESS:
                 return f'Non-success status code occurred while trying to ' \
                        f'add zones to list in propeller: {response.content}'
 
