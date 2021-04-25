@@ -52,6 +52,13 @@ class MGIDClient(TrafficSourceClient):
         requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
         response = requests.patch(requests_url_tmp, params=params)
 
+        if not isinstance(response, requests.Response):
+            return f'Error occurred while trying to add zones to audience in mgid: {response}'
+
+        if response.status_code != HTTP_200_SUCCESS:
+            return f'Non-success status code occurred while trying to ' \
+                   f'add zones to audience in mgid: {response.content}'
+
         requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
 
         response = requests_manager.patch(requests_url, params=params)
