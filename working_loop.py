@@ -62,6 +62,7 @@ def process():
             update = None
             if len(updates_list):
                 key = random.choice(list(updates_list.keys()))
+                print(key)
                 try:
                     update = json.loads(updates_list[key])
                 except json.JSONDecodeError:
