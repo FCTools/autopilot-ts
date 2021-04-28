@@ -90,4 +90,6 @@ class PropellerClient(TrafficSourceClient):
                 return f'Non-success status code occurred while trying to ' \
                        f'add zones to list in propeller: {response.content}'
 
+        self._logger.info(response.text)
+
         return 'OK'
