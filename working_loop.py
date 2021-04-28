@@ -66,23 +66,20 @@ def process():
                     update = json.loads(updates_list[key])
                 except json.JSONDecodeError:
                     _logger.error(f"Can't parse object: {updates_list[key]}")
-                del (updates_list[key])
+                del(updates_list[key])
 
         if update:
             _logger.info(f'Get new update: {key}')
             status = handler.handle(update)
 
             if status == 'OK':
-                _logger.info(f'Update successfully handled: {key}')
+                _logger.info(f'Update was successfully handled: {key}')
 
                 with redis_lock:
                     redis_client.remove_keys([key])
             else:
                 _logger.error(f"Can't handle update {key}: {status}")
                 time.sleep(10)
-
-                # with redis_lock:
-                #     redis_client.append(key, json.dumps(update))
 
         time.sleep(5)
 
