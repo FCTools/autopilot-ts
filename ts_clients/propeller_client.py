@@ -20,6 +20,7 @@ class PropellerClient(TrafficSourceClient):
         self._base_requests_url = PROPELLER_URL
 
         super().__init__()
+        self._setup_logger('propeller')
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         if status == STOP:
@@ -38,6 +39,7 @@ class PropellerClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in propeller: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in propeller: {response.content}'
 
@@ -59,6 +61,7 @@ class PropellerClient(TrafficSourceClient):
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to get campaign {list_type} list: {response.content}'
 
         try:
@@ -83,6 +86,7 @@ class PropellerClient(TrafficSourceClient):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
 
             if response.status_code != HTTP_200_SUCCESS:
+                self._logger.error(response.text)
                 return f'Non-success status code occurred while trying to ' \
                        f'add zones to list in propeller: {response.content}'
 

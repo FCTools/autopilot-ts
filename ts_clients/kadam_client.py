@@ -6,6 +6,9 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 import json
+import logging
+import os
+
 import requests
 
 from helpers import requests_manager
@@ -18,6 +21,7 @@ class KadamClient(TrafficSourceClient):
         self._base_requests_url = KADAM_URL
 
         super().__init__()
+        self._setup_logger('kadam')
 
     def change_campaign_status(self, campaign_id, api_key, status, client_id=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
@@ -30,6 +34,7 @@ class KadamClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 
@@ -54,6 +59,7 @@ class KadamClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 

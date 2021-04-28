@@ -20,6 +20,7 @@ class VimmyClient(TrafficSourceClient):
         self._base_requests_url = VIMMY_URL
 
         super().__init__()
+        self._setup_logger('vimmy')
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
@@ -30,6 +31,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         if campaign_info.status_code != HTTP_200_SUCCESS:
+            self._logger.error(campaign_info.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
@@ -42,6 +44,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {response.content}'
 
@@ -55,6 +58,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         if campaign_info.status_code != HTTP_200_SUCCESS:
+            self._logger.error(campaign_info.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
@@ -68,6 +72,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {response.content}'
 

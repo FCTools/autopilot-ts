@@ -35,7 +35,7 @@ def _configure_logger():
 
     _logger.setLevel(logging.DEBUG)
 
-    file_handler = logging.FileHandler("info_log.log", "w", "utf-8")
+    file_handler = logging.FileHandler(os.path.join('logs', 'main_log.log'), "w", "utf-8")
     file_handler.setFormatter(
         logging.Formatter(
             fmt="%(asctime)s - %(threadName)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"

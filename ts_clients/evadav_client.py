@@ -7,6 +7,8 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+import logging
+import os.path
 
 import requests
 
@@ -20,6 +22,7 @@ class EvadavClient(TrafficSourceClient):
         self._base_requests_url = EVADAV_URL
 
         super().__init__()
+        self._setup_logger('evadav')
 
     def _get_campaign_status(self, campaign_id, api_key):
         requests_url = self._base_requests_url + '/advertiser/campaigns/get'
@@ -34,10 +37,12 @@ class EvadavClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
 
         try:
             response = response.json()
+            self._logger.info(response)
 
             if response['success']:
                 return response['data']['campaign']['status']
@@ -73,6 +78,7 @@ class EvadavClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
 
         return 'OK'
@@ -91,6 +97,7 @@ class EvadavClient(TrafficSourceClient):
             return f'Error occurred while trying to add zones to audience in evadav: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'add zones to audience in evadav: {response.content}'
 

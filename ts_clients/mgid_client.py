@@ -18,6 +18,7 @@ class MGIDClient(TrafficSourceClient):
         self._base_requests_url = MGID_URL
 
         super().__init__()
+        self._setup_logger('mgid')
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}/'
@@ -33,6 +34,7 @@ class MGIDClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in mgid: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in mgid: {response.content}'
 
@@ -56,6 +58,7 @@ class MGIDClient(TrafficSourceClient):
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'add zones to audience in mgid: {response.content}'
 
@@ -67,6 +70,7 @@ class MGIDClient(TrafficSourceClient):
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'add zones to audience in mgid: {response.content}'
 
