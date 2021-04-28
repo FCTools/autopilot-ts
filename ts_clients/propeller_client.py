@@ -91,5 +91,6 @@ class PropellerClient(TrafficSourceClient):
                        f'add zones to list in propeller: {response.content}'
 
         self._logger.info(response.text)
+        self._logger.info(json.dumps({"zone": list(current_zones_list)}))
 
         return 'OK'
