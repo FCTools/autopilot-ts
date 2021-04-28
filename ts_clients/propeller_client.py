@@ -77,7 +77,7 @@ class PropellerClient(TrafficSourceClient):
 
         if len(zones_to_add) != 0:
             response = requests_manager.put(requests_url,
-                                            data=json.dumps({"zone": list(current_zones_list)}),
+                                            data=json.dumps({"zone": list(zones_to_add)}),
                                             params={'campaignId': str(campaign_id)},
                                             headers={"Authorization": f"Bearer {api_key}",
                                                      "Accept": "application/json", "Content-Type": "application/json"})
@@ -91,6 +91,6 @@ class PropellerClient(TrafficSourceClient):
                        f'add zones to list in propeller: {response.content}'
 
         self._logger.info(response.text)
-        self._logger.info(json.dumps({"zone": list(current_zones_list)}))
+        self._logger.info(json.dumps({"zone": list(zones_to_add)}))
 
         return 'OK'
