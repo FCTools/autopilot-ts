@@ -69,15 +69,11 @@ class PropellerClient(TrafficSourceClient):
         except json.decoder.JSONDecodeError as error:
             return f'Json decode error: {error.doc}'
 
-        zones_to_add = set()
+        current_zones_list.update(zones_list)
 
-        for zone in zones_list:
-            if zone not in current_zones_list:
-                zones_to_add.add(zone)
-
-        if len(zones_to_add) != 0:
+        if len(current_zones_list) != 0:
             response = requests_manager.put(requests_url,
-                                            data=json.dumps({"zone": list(zones_to_add)}),
+                                            data=json.dumps({"zone": list(current_zones_list)}),
                                             params={'campaignId': str(campaign_id)},
                                             headers={"Authorization": f"Bearer {api_key}",
                                                      "Accept": "application/json", "Content-Type": "application/json"})
@@ -89,8 +85,5 @@ class PropellerClient(TrafficSourceClient):
                 self._logger.error(response.text)
                 return f'Non-success status code occurred while trying to ' \
                        f'add zones to list in propeller: {response.content}'
-
-        self._logger.info(response.text)
-        self._logger.info(json.dumps({"zone": list(zones_to_add)}))
 
         return 'OK'
