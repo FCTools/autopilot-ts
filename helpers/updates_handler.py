@@ -14,6 +14,8 @@ from helpers.consts import *
 from ts_clients.evadav_client import EvadavClient
 from ts_clients.mgid_client import MGIDClient
 from ts_clients.propeller_client import PropellerClient
+from ts_clients.kadam_client import KadamClient
+from ts_clients.vimmy_client import VimmyClient
 from ts_clients.update import Update
 
 _logger = logging.getLogger(__name__)
@@ -37,6 +39,10 @@ class UpdatesHandler:
             client = EvadavClient()
         elif update.ts == MGID:
             client = MGIDClient()
+        elif update.ts == KADAM:
+            client = KadamClient()
+        elif update.ts == VIMMY:
+            client = VimmyClient()
         else:
             return f"Unknown traffic source: {update.ts}"
 
