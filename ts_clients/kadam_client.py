@@ -8,6 +8,7 @@
 import json
 import logging
 import os
+from hashlib import md5
 
 import requests
 
@@ -26,7 +27,11 @@ class KadamClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
+        signature = md5(f'.{api_key}')
+        params = {'signature': signature}
+
         response = requests_manager.patch(requests_url,
+                                          params=params,
                                           data=json.dumps({'data': [{'campaign_id': campaign_id,
                                                            'status': 0 if status == STOP else 1}]}))
 
