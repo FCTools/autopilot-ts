@@ -7,6 +7,7 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+from pprint import pprint
 
 import requests
 
@@ -37,6 +38,7 @@ class VimmyClient(TrafficSourceClient):
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
         campaign_data = campaign_info.json()
+        pprint(campaign_info.json())
         campaign_data['status'] = 0 if status == STOP else 1
         print(status)
 
