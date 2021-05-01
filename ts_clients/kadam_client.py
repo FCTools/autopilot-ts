@@ -23,7 +23,7 @@ class KadamClient(TrafficSourceClient):
         super().__init__()
         self._setup_logger('kadam')
 
-    def change_campaign_status(self, campaign_id, api_key, status, client_id=None):
+    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         response = requests_manager.patch(requests_url,
