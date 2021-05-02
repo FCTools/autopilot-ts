@@ -27,12 +27,10 @@ class KadamClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'.{api_key}'.encode(encoding='utf-8'))
-        params = {'signature': signature}
+        params = {'signature': signature, 'data': json.dumps({'data': [{'campaign_id': campaign_id,
+                                                              'status': 0 if status == STOP else 1}]})}
 
-        response = requests_manager.patch(requests_url,
-                                          params=params,
-                                          data=json.dumps({'data': [{'campaign_id': campaign_id,
-                                                           'status': 0 if status == STOP else 1}]}))
+        response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
