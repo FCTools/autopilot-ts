@@ -5,9 +5,8 @@
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
+
 import json
-import logging
-import os
 from hashlib import md5
 
 import requests
@@ -27,7 +26,7 @@ class KadamClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
-        signature = md5(f'.{api_key}')
+        signature = md5(f'.{api_key}'.encode(encoding='utf-8'))
         params = {'signature': signature}
 
         response = requests_manager.patch(requests_url,
