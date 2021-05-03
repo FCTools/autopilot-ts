@@ -36,10 +36,10 @@ class VimmyClient(TrafficSourceClient):
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
-        campaign_data = campaign_info.json()
+        campaign_data = json.loads(campaign_info.text.encode('utf-8'))
         campaign_data['status'] = 0 if status == STOP else 1
         campaign_data['clickurl'] = campaign_data['clickurl'].replace('amp;', '')
-        print(campaign_info.json())
+        print(campaign_data)
 
         response = requests_manager.put(requests_url, data=json.dumps(campaign_data), headers=headers)
 
