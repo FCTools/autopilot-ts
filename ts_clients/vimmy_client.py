@@ -39,9 +39,10 @@ class VimmyClient(TrafficSourceClient):
         campaign_data = json.loads(campaign_info.text)
         campaign_data['status'] = 0 if status == STOP else 1
         campaign_data['clickurl'] = campaign_data['clickurl'].replace('amp;', '')
-        print(campaign_info.text)
+        print(json.dumps(campaign_data, ensure_ascii=False))
 
-        response = requests_manager.put(requests_url, data=json.dumps(campaign_data), headers=headers)
+        response = requests_manager.put(requests_url, data=json.dumps(campaign_data, ensure_ascii=False),
+                                        headers=headers)
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
