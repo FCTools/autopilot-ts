@@ -26,9 +26,10 @@ class KadamClient(TrafficSourceClient):
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
-        signature = md5(f'.{api_key}'.encode(encoding='utf-8'))
+        signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
         params = {'signature': signature, 'data': json.dumps({'data': [{'campaign_id': campaign_id,
-                                                              'status': 0 if status == STOP else 1}]})}
+                                                                        'status': 0 if status == STOP else 1}]}),
+                  'client_id': client_key}
 
         response = requests_manager.patch(requests_url, params=params)
 
@@ -45,17 +46,18 @@ class KadamClient(TrafficSourceClient):
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
-        if list_type == BLACKLIST:
-            response = requests_manager.patch(requests_url,
-                                              data=json.dumps({'data': [{'campaign_id': campaign_id,
-                                                                         'black_list': zones_list}]}))
+        signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
+        params = {'signature': signature, 'client_id': client_key}
 
-        if list_type == WHITELIST:
-            response = requests_manager.patch(requests_url,
-                                              data=json.dumps({'data': [{'campaign_id': campaign_id,
-                                                                         'white_list': zones_list}]}))
+        if list_type == BLACKLIST:
+            data = json.dumps({'data': [{'campaign_id': campaign_id, 'black_list': zones_list}]})
+        elif list_type == WHITELIST:
+            data = json.dumps({'data': [{'campaign_id': campaign_id, 'white_list': zones_list}]})
         else:
             return f'Incorrect list type: {list_type}'
+
+        params['data'] = data
+        response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
