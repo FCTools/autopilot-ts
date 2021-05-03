@@ -39,7 +39,7 @@ class VimmyClient(TrafficSourceClient):
         campaign_data = json.loads(campaign_info.text)
         campaign_data['status'] = 0 if status == STOP else 1
         campaign_data['clickurl'] = campaign_data['clickurl'].replace('amp;', '')
-        print(json.dumps(campaign_data, ensure_ascii=False))
+        print(campaign_info.text)
 
         response = requests_manager.put(requests_url, data=json.dumps(campaign_data, ensure_ascii=False),
                                         headers=headers)
