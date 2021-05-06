@@ -12,15 +12,16 @@ import requests
 
 from helpers import requests_manager
 from helpers.consts import *
+from helpers.db_logger import Logger
 from ts_clients.base_client import TrafficSourceClient
 
 
 class EvadavClient(TrafficSourceClient):
     def __init__(self):
         self._base_requests_url = EVADAV_URL
+        self._logger = Logger()
 
         super().__init__()
-        self._setup_logger('evadav')
 
     # TODO: add task_id to arguments
     def _get_campaign_status(self, campaign_id, api_key):
@@ -33,6 +34,7 @@ class EvadavClient(TrafficSourceClient):
                                                  "Content-Type": "application/json"})
 
         # TODO: log response here and all requests details
+
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 

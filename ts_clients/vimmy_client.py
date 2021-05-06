@@ -12,15 +12,16 @@ import requests
 
 from helpers import requests_manager
 from helpers.consts import *
+from helpers.db_logger import Logger
 from ts_clients.base_client import TrafficSourceClient
 
 
 class VimmyClient(TrafficSourceClient):
     def __init__(self):
         self._base_requests_url = VIMMY_URL
+        self._logger = Logger()
 
         super().__init__()
-        self._setup_logger('vimmy')
 
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         headers = {'content-type': 'application/json', 'accept': 'application/json', 'X-Api-Key': api_key}

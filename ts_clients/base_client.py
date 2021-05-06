@@ -17,20 +17,6 @@ class TrafficSourceClient:
     def __init__(self):
         self._logger = None
 
-    def _setup_logger(self, ts_name):
-        self._logger = logging.getLogger(__name__)
-        self._logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler(os.path.join('logs', f'{ts_name}_log.log'))
-        fh.setLevel(logging.DEBUG)
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.ERROR)
-
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        ch.setFormatter(formatter)
-        fh.setFormatter(formatter)
-        self._logger.addHandler(ch)
-        self._logger.addHandler(fh)
-
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         """
         Method for play/stop campaign.
