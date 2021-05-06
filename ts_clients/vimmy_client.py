@@ -28,6 +28,8 @@ class VimmyClient(TrafficSourceClient):
 
         campaign_info = requests_manager.get(requests_url, headers=headers)
 
+        # TODO: log response here and all requests details
+
         if not isinstance(campaign_info, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
@@ -43,6 +45,8 @@ class VimmyClient(TrafficSourceClient):
 
         response = requests_manager.put(requests_url, data=json.dumps(campaign_data, ensure_ascii=False),
                                         headers=headers)
+
+        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
@@ -62,6 +66,8 @@ class VimmyClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
         campaign_info = requests_manager.get(requests_url, headers=headers)
 
+        # TODO: log response here and all requests details
+
         if not isinstance(campaign_info, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
@@ -75,6 +81,8 @@ class VimmyClient(TrafficSourceClient):
         campaign_data['sites']['items'] = zones_list
 
         response = requests_manager.put(requests_url, data=json.dumps(campaign_data), headers=headers)
+
+        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'

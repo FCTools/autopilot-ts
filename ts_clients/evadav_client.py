@@ -7,8 +7,6 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
-import logging
-import os.path
 
 import requests
 
@@ -24,6 +22,7 @@ class EvadavClient(TrafficSourceClient):
         super().__init__()
         self._setup_logger('evadav')
 
+    # TODO: add task_id to arguments
     def _get_campaign_status(self, campaign_id, api_key):
         requests_url = self._base_requests_url + '/advertiser/campaigns/get'
 
@@ -33,6 +32,7 @@ class EvadavClient(TrafficSourceClient):
                                         headers={"Accept": "application/json",
                                                  "Content-Type": "application/json"})
 
+        # TODO: log response here and all requests details
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
@@ -51,6 +51,7 @@ class EvadavClient(TrafficSourceClient):
         except Exception:
             return 'error'
 
+    # TODO: add task_id to arguments
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
         if status == STOP:
             requests_url = self._base_requests_url + '/advertiser/campaigns/stop'
@@ -74,6 +75,8 @@ class EvadavClient(TrafficSourceClient):
                                          headers={"Accept": "application/json",
                                                   "Content-Type": "application/json"})
 
+        # TODO: log response here and all requests details
+
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
@@ -83,6 +86,7 @@ class EvadavClient(TrafficSourceClient):
 
         return 'OK'
 
+    # TODO: add task_id to arguments
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + '/advertiser/sources/add'
 
@@ -92,6 +96,8 @@ class EvadavClient(TrafficSourceClient):
                                                   "Content-Type": "application/json"},
                                          data=json.dumps({"audience": list_to_add,
                                                           "sources": list(zones_list)}))
+
+        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to add zones to audience in evadav: {response}'

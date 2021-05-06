@@ -33,6 +33,8 @@ class KadamClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
+        # TODO: log response here and all requests details
+
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
@@ -58,6 +60,8 @@ class KadamClient(TrafficSourceClient):
 
         params['data'] = data
         response = requests_manager.patch(requests_url, params=params)
+
+        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in kadam: {response}'

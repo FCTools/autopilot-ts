@@ -30,6 +30,8 @@ class MGIDClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
+        # TODO: log response here and all requests details
+
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to change campaign status in mgid: {response}'
 
@@ -54,6 +56,8 @@ class MGIDClient(TrafficSourceClient):
         requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
         response = requests.patch(requests_url_tmp, params=params)
 
+        # TODO: log response here and all requests details
+
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
@@ -65,6 +69,8 @@ class MGIDClient(TrafficSourceClient):
         requests_url += f'?widgetsFilterUid={editing_method}, {filter_type}, {zones}'
 
         response = requests_manager.patch(requests_url, params=params)
+
+        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
