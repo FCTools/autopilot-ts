@@ -43,7 +43,8 @@ class VimmyClient(TrafficSourceClient):
         # campaign_data['clickurl'] = campaign_data['clickurl'].replace('amp;', '')
         # print(campaign_info.text)
 
-        response = requests_manager.put(requests_url, data=json.dumps(campaign_data, ensure_ascii=False),
+        response = requests_manager.put(requests_url,
+                                        data=json.dumps(campaign_data, ensure_ascii=False).encode('utf-8'),
                                         headers=headers)
 
         # TODO: log response here and all requests details
@@ -80,7 +81,7 @@ class VimmyClient(TrafficSourceClient):
         campaign_data['sites']['is_white'] = (list_type == WHITELIST)
         campaign_data['sites']['items'] = zones_list
 
-        response = requests_manager.put(requests_url, data=json.dumps(campaign_data), headers=headers)
+        response = requests_manager.put(requests_url, data=json.dumps(campaign_data).encode('utf-8'), headers=headers)
 
         # TODO: log response here and all requests details
 
