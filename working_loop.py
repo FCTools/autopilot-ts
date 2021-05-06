@@ -70,7 +70,7 @@ def process():
 
         if update:
             _logger.info(f'Get new update: {key}')
-            status = handler.handle(update)
+            status = handler.handle(update, key)
 
             if status == 'OK':
                 _logger.info(f'Update was successfully handled: {key}')

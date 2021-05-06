@@ -12,11 +12,11 @@ from pydantic import ValidationError
 
 from helpers.consts import *
 from ts_clients.evadav_client import EvadavClient
+from ts_clients.kadam_client import KadamClient
 from ts_clients.mgid_client import MGIDClient
 from ts_clients.propeller_client import PropellerClient
-from ts_clients.kadam_client import KadamClient
-from ts_clients.vimmy_client import VimmyClient
 from ts_clients.update import Update
+from ts_clients.vimmy_client import VimmyClient
 
 _logger = logging.getLogger(__name__)
 
@@ -24,8 +24,8 @@ _logger = logging.getLogger(__name__)
 class UpdatesHandler:
     def __init__(self):
         pass
-    
-    def handle(self, update):
+
+    def handle(self, update, task_id):
         status = None
 
         try:
@@ -47,22 +47,23 @@ class UpdatesHandler:
             return f"Unknown traffic source: {update.ts}"
 
         if update.action == PLAY_CAMPAIGN:
-            status = client.change_campaign_status(update.campaign_id, update.api_key,
+            status = client.change_campaign_status(task_id, update.campaign_id, update.api_key,
                                                    status=PLAY, client_key=update.client_id)
         elif update.action == STOP_CAMPAIGN:
-            status = client.change_campaign_status(update.campaign_id, update.api_key,
+            status = client.change_campaign_status(task_id, update.campaign_id, update.api_key,
                                                    status=STOP, client_key=update.client_id)
         elif update.action == EXCLUDE_ZONE or update.action == INCLUDE_ZONE:
             list_ = BLACKLIST if update.action == EXCLUDE_ZONE else WHITELIST
 
-            if isinstance(client, PropellerClient):
-                status = client.add_zones_to_list(update.campaign_id, update.zones,
+            if isinstance(client, PropellerClient) or isinstance(client, VimmyClient) or isinstance(client,
+                                                                                                    KadamClient):
+                status = client.add_zones_to_list(task_id, update.campaign_id, update.zones,
                                                   update.api_key, list_type=list_)
             elif isinstance(client, EvadavClient):
-                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                status = client.add_zones_to_list(task_id, update.campaign_id, update.zones,
                                                   update.api_key, list_to_add=update.list)
             elif isinstance(client, MGIDClient):
-                status = client.add_zones_to_list(update.campaign_id, update.zones,
+                status = client.add_zones_to_list(task_id, update.campaign_id, update.zones,
                                                   update.api_key, list_type=list_, client_key=update.client_id)
         else:
             return f"Unknown action: {update.action}"

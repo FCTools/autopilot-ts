@@ -24,7 +24,7 @@ class KadamClient(TrafficSourceClient):
 
         super().__init__()
 
-    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
+    def change_campaign_status(self, task_id, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
@@ -40,13 +40,12 @@ class KadamClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
-            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
+    def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
@@ -68,7 +67,6 @@ class KadamClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in kadam: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
-            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in kadam: {response.content}'
 

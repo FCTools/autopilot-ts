@@ -23,7 +23,7 @@ class VimmyClient(TrafficSourceClient):
 
         super().__init__()
 
-    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
+    def change_campaign_status(self, task_id, campaign_id, api_key, status, client_key=None):
         headers = {'content-type': 'application/json', 'accept': 'application/json', 'X-Api-Key': api_key}
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
 
@@ -35,14 +35,11 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         if campaign_info.status_code != HTTP_200_SUCCESS:
-            self._logger.error(campaign_info.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
         campaign_data = json.loads(campaign_info.text)
         campaign_data['status'] = 2 if status == STOP else 1
-        # campaign_data['clickurl'] = campaign_data['clickurl'].replace('amp;', '')
-        # print(campaign_info.text)
 
         response = requests_manager.put(requests_url,
                                         data=json.dumps(campaign_data, ensure_ascii=False).encode('utf-8'),
@@ -54,15 +51,12 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
-            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {response.content}'
 
-        print(response.text)
-
         return 'OK'
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
+    def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
         headers = {'content-type': 'application/json', 'accept': 'application/json', 'X-Api-Key': api_key}
 
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
@@ -74,7 +68,6 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         if campaign_info.status_code != HTTP_200_SUCCESS:
-            self._logger.error(campaign_info.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {campaign_info.content}'
 
@@ -90,7 +83,6 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
-            self._logger.error(response.text)
             return f'Non-success status code occurred while trying to ' \
                    f'change campaign status in Vimmy: {response.content}'
 

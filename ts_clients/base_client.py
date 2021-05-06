@@ -17,10 +17,12 @@ class TrafficSourceClient:
     def __init__(self):
         self._logger = None
 
-    def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
+    def change_campaign_status(self, task_id, campaign_id, api_key, status, client_key=None):
         """
         Method for play/stop campaign.
 
+        :param task_id: internal autopilot task id
+        :type task_id: str
         :param client_key: client id
         :type client_key: Optional[str]
         :param campaign_id: campaign id from traffic source
@@ -35,11 +37,13 @@ class TrafficSourceClient:
 
         raise NotImplemented()
 
-    def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None,
+    def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None,
                           list_to_add=None, client_key=None):
         """
         Method for play/stop campaign.
 
+        :param task_id: internal autopilot task id
+        :type task_id: str
         :param campaign_id: campaign id from traffic source
         :type campaign_id: str
         :param zones_list: list with zones ids
