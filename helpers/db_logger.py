@@ -7,24 +7,30 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import os
-
-import psycopg2
 from contextlib import closing
 
-from helpers.singleton import Singleton
+import psycopg2
+from psycopg2 import sql
 
 
-class Logger(metaclass=Singleton):
+class Logger:
     def __init__(self):
         self._user = os.getenv('DB_USER')
+        self._db_name = os.getenv('DB_NAME')
         self._password = os.getenv('DB_PASSWORD')
         self._host = os.getenv('DB_HOST')
         self._port = os.getenv('DB_PORT')
 
-    def log_request(self, task_id, request_url, headers, body, type_, response, status_code, description):
-        with closing(psycopg2.connect(...)) as conn:
+    def log_request(self, task_id, time_, request_url, headers, body, type_, response, status_code, description):
+        with closing(psycopg2.connect(dbname=self._db_name, user=self._user,
+                                      password=self._password, host=self._host, port=self._port)) as conn:
             with conn.cursor() as cursor:
-                cursor.execute('SELECT * FROM airport LIMIT 5')
-                for row in cursor:
-                    print(row)
+                conn.autocommit = True
+                values = [
+                    (task_id, time_, request_url, headers, body, type_, response, status_code, description),
+                ]
+                insert = sql.SQL('INSERT INTO logs (code, name, country_name) VALUES {}').format(
+                    sql.SQL(',').join(map(sql.Literal, values))
+                )
 
+                cursor.execute(insert)
