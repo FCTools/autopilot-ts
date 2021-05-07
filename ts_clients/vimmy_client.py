@@ -7,6 +7,7 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+from copy import deepcopy
 from datetime import datetime
 
 import requests
@@ -30,9 +31,13 @@ class VimmyClient(TrafficSourceClient):
 
         campaign_info = requests_manager.get(requests_url, headers=headers)
 
+        # prevent api_key leak from logs
+        headers_ = deepcopy(headers)
+        headers_['X-Api-Key'] = "api_key"
+
         if not isinstance(campaign_info, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                     headers=json.dumps(headers), body='null', type_='GET',
+                                     headers=json.dumps(headers_), body='null', type_='GET',
                                      response=str(campaign_info),
                                      status_code=-1,
                                      description='request to get campaign info from vimmy')
@@ -40,7 +45,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                 headers=json.dumps(headers), body='null', type_='GET',
+                                 headers=json.dumps(headers_), body='null', type_='GET',
                                  response=str(campaign_info.text),
                                  status_code=campaign_info.status_code,
                                  description='request to get campaign info from vimmy')
@@ -57,7 +62,7 @@ class VimmyClient(TrafficSourceClient):
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                     headers=json.dumps(headers), body=data, type_='PUT',
+                                     headers=json.dumps(headers_), body=data, type_='PUT',
                                      response=str(response),
                                      status_code=-1,
                                      description='request to change campaign status in vimmy')
@@ -65,7 +70,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                 headers=json.dumps(headers), body=data, type_='PUT',
+                                 headers=json.dumps(headers_), body=data, type_='PUT',
                                  response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to change campaign status in vimmy')
@@ -82,9 +87,13 @@ class VimmyClient(TrafficSourceClient):
         requests_url = self._base_requests_url + f'campaigns/{campaign_id}'
         campaign_info = requests_manager.get(requests_url, headers=headers)
 
+        # prevent api_key leak from logs
+        headers_ = deepcopy(headers)
+        headers_['X-Api-Key'] = "api_key"
+
         if not isinstance(campaign_info, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                     headers=json.dumps(headers), body='null', type_='GET',
+                                     headers=json.dumps(headers_), body='null', type_='GET',
                                      response=str(campaign_info),
                                      status_code=-1,
                                      description='request to get campaign info from vimmy')
@@ -92,7 +101,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {campaign_info}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                 headers=json.dumps(headers), body='null', type_='GET',
+                                 headers=json.dumps(headers_), body='null', type_='GET',
                                  response=str(campaign_info.text),
                                  status_code=campaign_info.status_code,
                                  description='request to get campaign info from vimmy')
@@ -110,7 +119,7 @@ class VimmyClient(TrafficSourceClient):
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                     headers=json.dumps(headers), body=data, type_='PUT',
+                                     headers=json.dumps(headers_), body=data, type_='PUT',
                                      response=str(response),
                                      status_code=-1,
                                      description='request to add zones to list in vimmy')
@@ -118,7 +127,7 @@ class VimmyClient(TrafficSourceClient):
             return f'Error occurred while trying to change campaign status in Vimmy: {response}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
-                                 headers=json.dumps(headers), body=data, type_='PUT',
+                                 headers=json.dumps(headers_), body=data, type_='PUT',
                                  response=str(campaign_info.text),
                                  status_code=campaign_info.status_code,
                                  description='request to add zones to list in vimmy')
