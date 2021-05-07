@@ -36,8 +36,8 @@ class KadamClient(TrafficSourceClient):
         response = requests_manager.patch(requests_url, params=params)
 
         # prevent signature and client_id leak from logs
-        params['signature'] = '******'
-        params['client_id'] = '******'
+        params['signature'] = 'signature'
+        params['client_id'] = 'client_id'
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
@@ -76,8 +76,8 @@ class KadamClient(TrafficSourceClient):
         response = requests_manager.patch(requests_url, params=params)
 
         # prevent signature and client_id leak from logs
-        params['signature'] = '******'
-        params['client_id'] = '******'
+        params['signature'] = 'signature'
+        params['client_id'] = 'signature'
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),

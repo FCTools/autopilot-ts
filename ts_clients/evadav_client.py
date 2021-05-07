@@ -33,7 +33,7 @@ class EvadavClient(TrafficSourceClient):
         response = requests_manager.get(requests_url, params=params, headers=headers)
 
         # prevent access token leak from logs in database
-        params['access-token'] = '******'
+        params['access-token'] = 'access-token'
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
@@ -84,7 +84,7 @@ class EvadavClient(TrafficSourceClient):
         response = requests_manager.post(requests_url, params=params, headers=headers)
 
         # prevent access token leak from logs in database
-        params['access-token'] = '******'
+        params['access-token'] = 'access-token'
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
@@ -117,7 +117,7 @@ class EvadavClient(TrafficSourceClient):
         response = requests_manager.post(requests_url, params=params, headers=headers, data=data)
 
         # prevent access token leak from logs in database
-        params['access-token'] = '******'
+        params['access-token'] = 'access-token'
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),

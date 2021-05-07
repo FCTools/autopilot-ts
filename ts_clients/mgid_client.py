@@ -34,15 +34,20 @@ class MGIDClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
+        # prevent token leak from logs
+        params['token'] = 'token'
+
         if not isinstance(response, requests.Response):
-            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+            self._logger.log_request(task_id, time_=str(datetime.now()),
+                                     request_url=requests_url.replace(client_key, 'client_id') + urlencode(params),
                                      headers='-', body='null', type_='PATCH', response=str(response),
                                      status_code=-1,
                                      description='request to change campaign status in mgid')
 
             return f'Error occurred while trying to change campaign status in mgid: {response}'
 
-        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+        self._logger.log_request(task_id, time_=str(datetime.now()),
+                                 request_url=requests_url.replace(client_key, 'client_id') + urlencode(params),
                                  headers='-', body='null', type_='PATCH', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to change campaign status in mgid')
@@ -56,7 +61,6 @@ class MGIDClient(TrafficSourceClient):
     def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None,
                           list_to_add=None, client_key=None):
         requests_url = self._base_requests_url + f'{client_key}/campaigns/{campaign_id}'
-
         editing_method = 'include' if list_type == WHITELIST else 'exclude'
         filter_type = 'off'
         zones = ','.join(zones_list)
@@ -67,16 +71,20 @@ class MGIDClient(TrafficSourceClient):
         requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
         response = requests.patch(requests_url_tmp, params=params)
 
+        # prevent token leak from logs
+        params_ = {'token': 'token'}
+
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()),
-                                     request_url=requests_url_tmp + urlencode(params),
+                                     request_url=requests_url_tmp.replace(client_key, 'client_id') + urlencode(params_),
                                      headers='-', body='null', type_='PATCH', response=str(response),
                                      status_code=-1,
                                      description='request to change filter type in mgid')
 
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
-        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url_tmp + urlencode(params),
+        self._logger.log_request(task_id, time_=str(datetime.now()),
+                                 request_url=requests_url_tmp.replace(client_key, 'client_id') + urlencode(params_),
                                  headers='-', body='null', type_='PATCH', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to change filter type in mgid')
@@ -90,13 +98,15 @@ class MGIDClient(TrafficSourceClient):
         response = requests_manager.patch(requests_url, params=params)
 
         if not isinstance(response, requests.Response):
-            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+            self._logger.log_request(task_id, time_=str(datetime.now()),
+                                     request_url=requests_url.replace(client_key, 'client_id') + urlencode(params_),
                                      headers='-', body='null', type_='PATCH', response=str(response),
                                      status_code=-1,
                                      description='request to add zones to list in mgid')
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
 
-        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+        self._logger.log_request(task_id, time_=str(datetime.now()),
+                                 request_url=requests_url.replace(client_key, 'client_id') + urlencode(params_),
                                  headers='-', body='null', type_='PATCH', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to add zones to list in mgid')
