@@ -25,16 +25,12 @@ class EvadavClient(TrafficSourceClient):
 
         super().__init__()
 
-    # TODO: add task_id to arguments
     def _get_campaign_status(self, task_id, campaign_id, api_key):
         requests_url = self._base_requests_url + '/advertiser/campaigns/get'
-
         params = {"access-token": api_key, "id": campaign_id}
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
         response = requests_manager.get(requests_url, params=params, headers=headers)
-
-        # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
@@ -52,7 +48,7 @@ class EvadavClient(TrafficSourceClient):
             return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                 headers=json.dumps(headers), body='null', type_='GET', response=str(response),
+                                 headers=json.dumps(headers), body='null', type_='GET', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to get campaign status in evadav')
 
@@ -89,17 +85,32 @@ class EvadavClient(TrafficSourceClient):
 
         response = requests_manager.post(requests_url, params=params, headers=headers)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body='null', type_='POST',
+                                     response=str(response),
+                                     status_code=-1,
+                                     description=f'request to {status} campaign in evadav')
+
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body='null', type_='POST',
+                                     response=str(response.text),
+                                     status_code=response.status_code,
+                                     description=f'request to {status} campaign in evadav')
+
             return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers=json.dumps(headers), body='null', type_='POST',
+                                 response=str(response.text),
+                                 status_code=response.status_code,
+                                 description=f'request to {status} campaign in evadav')
 
         return 'OK'
 
-    # TODO: add task_id to arguments
     def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None, list_to_add=None,
                           client_key=None):
         requests_url = self._base_requests_url + '/advertiser/sources/add'
@@ -110,13 +121,29 @@ class EvadavClient(TrafficSourceClient):
 
         response = requests_manager.post(requests_url, params=params, headers=headers, data=data)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body=data, type_='POST',
+                                     response=str(response),
+                                     status_code=-1,
+                                     description=f'request to add zones to list in evadav')
+
             return f'Error occurred while trying to add zones to audience in evadav: {response}'
 
         if response.status_code != HTTP_200_SUCCESS:
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body=data, type_='POST',
+                                     response=str(response.text),
+                                     status_code=response.status_code,
+                                     description=f'request to add zones to list in evadav')
+
             return f'Non-success status code occurred while trying to ' \
                    f'add zones to audience in evadav: {response.content}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers=json.dumps(headers), body=data, type_='POST',
+                                 response=str(response.text),
+                                 status_code=response.status_code,
+                                 description=f'request to add zones to list in evadav')
 
         return 'OK'
