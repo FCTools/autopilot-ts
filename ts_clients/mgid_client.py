@@ -6,6 +6,9 @@
 # Proprietary and confidential
 # Author: German Yakimov <german13yakimov@gmail.com>
 
+from datetime import datetime
+from urllib.parse import urlencode
+
 import requests
 
 from helpers import requests_manager
@@ -31,10 +34,18 @@ class MGIDClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers='-', body='null', type_='PATCH', response=str(response),
+                                     status_code=-1,
+                                     description='request to change campaign status in mgid')
+
             return f'Error occurred while trying to change campaign status in mgid: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers='-', body='null', type_='PATCH', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to change campaign status in mgid')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
@@ -56,10 +67,19 @@ class MGIDClient(TrafficSourceClient):
         requests_url_tmp = requests_url + f'?widgetsFilterUid={editing_method}, off'
         response = requests.patch(requests_url_tmp, params=params)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()),
+                                     request_url=requests_url_tmp + urlencode(params),
+                                     headers='-', body='null', type_='PATCH', response=str(response),
+                                     status_code=-1,
+                                     description='request to change filter type in mgid')
+
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url_tmp + urlencode(params),
+                                 headers='-', body='null', type_='PATCH', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to change filter type in mgid')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
@@ -69,10 +89,17 @@ class MGIDClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers='-', body='null', type_='PATCH', response=str(response),
+                                     status_code=-1,
+                                     description='request to add zones to list in mgid')
             return f'Error occurred while trying to add zones to audience in mgid: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers='-', body='null', type_='PATCH', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to add zones to list in mgid')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
