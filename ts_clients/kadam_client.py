@@ -7,7 +7,9 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+from datetime import datetime
 from hashlib import md5
+from urllib.parse import urlencode
 
 import requests
 
@@ -26,7 +28,6 @@ class KadamClient(TrafficSourceClient):
 
     def change_campaign_status(self, task_id, campaign_id, api_key, status, client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
-
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
         params = {'signature': signature, 'data': json.dumps({'data': [{'campaign_id': campaign_id,
                                                                         'status': 0 if status == STOP else 1}]}),
@@ -34,10 +35,17 @@ class KadamClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers='-', body='null', type_='PATCH', response=str(response),
+                                     status_code=-1, description='request to change campaign status in kadam')
+
             return f'Error occurred while trying to change campaign status in kadam: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers='-', body='null', type_='PATCH', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to change campaign status in kadam')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
@@ -45,7 +53,8 @@ class KadamClient(TrafficSourceClient):
 
         return 'OK'
 
-    def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
+    def add_zones_to_list(self, task_id, campaign_id, zones_list, api_key, list_type=None, list_to_add=None,
+                          client_key=None):
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
@@ -62,10 +71,18 @@ class KadamClient(TrafficSourceClient):
 
         response = requests_manager.patch(requests_url, params=params)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers='-', body='null', type_='PATCH', response=str(response),
+                                     status_code=-1,
+                                     description='request to add zones to list in kadam')
+
             return f'Error occurred while trying to change campaign status in kadam: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers='-', body='null', type_='PATCH', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to add zones to list in kadam')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
