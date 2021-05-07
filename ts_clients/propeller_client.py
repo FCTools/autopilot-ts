@@ -7,6 +7,8 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+from datetime import datetime
+from urllib.parse import urlencode
 
 import requests
 
@@ -37,10 +39,18 @@ class PropellerClient(TrafficSourceClient):
 
         response = requests_manager.put(requests_url, data=data, headers=headers)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
+                                     headers=json.dumps(headers), body=data, type_='PUT', response=str(response),
+                                     status_code=-1,
+                                     description='request to change campaign status in propeller')
+
             return f'Error occurred while trying to change campaign status in propeller: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
+                                 headers=json.dumps(headers), body=data, type_='PUT', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to change campaign status in propeller')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to ' \
@@ -66,7 +76,17 @@ class PropellerClient(TrafficSourceClient):
         # TODO: log response here and all requests details
 
         if not isinstance(response, requests.Response):
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body='null', type_='GET', response=str(response),
+                                     status_code=-1,
+                                     description='request to get zones already included/excluded zones from propeller')
+
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
+
+        self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                 headers=json.dumps(headers), body='null', type_='GET', response=str(response.text),
+                                 status_code=response.status_code,
+                                 description='request to get zones already included/excluded zones from propeller')
 
         if response.status_code != HTTP_200_SUCCESS:
             return f'Non-success status code occurred while trying to get campaign {list_type} list: {response.content}'
@@ -89,7 +109,19 @@ class PropellerClient(TrafficSourceClient):
             # TODO: log response here and all requests details
 
             if not isinstance(response, requests.Response):
+                self._logger.log_request(task_id, time_=str(datetime.now()),
+                                         request_url=requests_url + urlencode(params),
+                                         headers=json.dumps(headers), body=data, type_='PUT',
+                                         response=str(response),
+                                         status_code=-1,
+                                         description='request to include/exclude zones in propeller')
+
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
+
+            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
+                                     headers=json.dumps(headers), body=data, type_='PUT', response=str(response.text),
+                                     status_code=response.status_code,
+                                     description='request to include/exclude zones in propeller')
 
             if response.status_code != HTTP_200_SUCCESS:
                 return f'Non-success status code occurred while trying to ' \
