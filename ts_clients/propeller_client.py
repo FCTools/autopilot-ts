@@ -7,6 +7,7 @@
 # Author: German Yakimov <german13yakimov@gmail.com>
 
 import json
+from copy import deepcopy
 from datetime import datetime
 from urllib.parse import urlencode
 
@@ -38,6 +39,9 @@ class PropellerClient(TrafficSourceClient):
                    "Content-Type": "application/json"}
 
         response = requests_manager.put(requests_url, data=data, headers=headers)
+
+        # prevent api_key leak from logs
+        headers['Authorization'] = "Bearer api_key"
 
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url,
@@ -73,16 +77,20 @@ class PropellerClient(TrafficSourceClient):
 
         response = requests_manager.get(requests_url, params=params, headers=headers)
 
+        # prevent api_key leak from logs
+        headers_ = deepcopy(headers)
+        headers_['Authorization'] = "Bearer api_key"
+
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                     headers=json.dumps(headers), body='null', type_='GET', response=str(response),
+                                     headers=json.dumps(headers_), body='null', type_='GET', response=str(response),
                                      status_code=-1,
                                      description='request to get zones already included/excluded zones from propeller')
 
             return f'Error occurred while trying to get campaign {list_type} list: {response}'
 
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                 headers=json.dumps(headers), body='null', type_='GET', response=str(response.text),
+                                 headers=json.dumps(headers_), body='null', type_='GET', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to get zones already included/excluded zones from propeller')
 
@@ -98,16 +106,13 @@ class PropellerClient(TrafficSourceClient):
 
         if len(current_zones_list) != 0:
             data = json.dumps({"zone": list(current_zones_list)})
-            params = {'campaignId': str(campaign_id)}
-            headers = {"Authorization": f"Bearer {api_key}", "Accept": "application/json",
-                       "Content-Type": "application/json"}
 
             response = requests_manager.put(requests_url, data=data, params=params, headers=headers)
 
             if not isinstance(response, requests.Response):
                 self._logger.log_request(task_id, time_=str(datetime.now()),
                                          request_url=requests_url + urlencode(params),
-                                         headers=json.dumps(headers), body=data, type_='PUT',
+                                         headers=json.dumps(headers_), body=data, type_='PUT',
                                          response=str(response),
                                          status_code=-1,
                                          description='request to include/exclude zones in propeller')
@@ -115,7 +120,7 @@ class PropellerClient(TrafficSourceClient):
                 return f'Error occurred while trying to set campaign {list_type} list: {response}'
 
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                     headers=json.dumps(headers), body=data, type_='PUT', response=str(response.text),
+                                     headers=json.dumps(headers_), body=data, type_='PUT', response=str(response.text),
                                      status_code=response.status_code,
                                      description='request to include/exclude zones in propeller')
 
