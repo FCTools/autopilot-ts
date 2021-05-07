@@ -32,6 +32,9 @@ class EvadavClient(TrafficSourceClient):
 
         response = requests_manager.get(requests_url, params=params, headers=headers)
 
+        # prevent access token leak from logs in database
+        params['access-token'] = '******'
+
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                      headers=json.dumps(headers), body='null', type_='GET', response=str(response),
@@ -39,18 +42,13 @@ class EvadavClient(TrafficSourceClient):
 
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
-        if response.status_code != HTTP_200_SUCCESS:
-            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                     headers=json.dumps(headers), body='null', type_='GET', response=str(response.text),
-                                     status_code=response.status_code,
-                                     description='request to get campaign status in evadav')
-
-            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
-
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                  headers=json.dumps(headers), body='null', type_='GET', response=str(response.text),
                                  status_code=response.status_code,
                                  description='request to get campaign status in evadav')
+
+        if response.status_code != HTTP_200_SUCCESS:
+            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
 
         try:
             response = response.json()
@@ -85,6 +83,9 @@ class EvadavClient(TrafficSourceClient):
 
         response = requests_manager.post(requests_url, params=params, headers=headers)
 
+        # prevent access token leak from logs in database
+        params['access-token'] = '******'
+
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                      headers=json.dumps(headers), body='null', type_='POST',
@@ -94,20 +95,14 @@ class EvadavClient(TrafficSourceClient):
 
             return f'Error occurred while trying to change campaign status in evadav: {response}'
 
-        if response.status_code != HTTP_200_SUCCESS:
-            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                     headers=json.dumps(headers), body='null', type_='POST',
-                                     response=str(response.text),
-                                     status_code=response.status_code,
-                                     description=f'request to {status} campaign in evadav')
-
-            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
-
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                  headers=json.dumps(headers), body='null', type_='POST',
                                  response=str(response.text),
                                  status_code=response.status_code,
                                  description=f'request to {status} campaign in evadav')
+
+        if response.status_code != HTTP_200_SUCCESS:
+            return f'Non-success status code occurred while trying to change status in evadav: {response.text}'
 
         return 'OK'
 
@@ -121,6 +116,9 @@ class EvadavClient(TrafficSourceClient):
 
         response = requests_manager.post(requests_url, params=params, headers=headers, data=data)
 
+        # prevent access token leak from logs in database
+        params['access-token'] = '******'
+
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                      headers=json.dumps(headers), body=data, type_='POST',
@@ -130,20 +128,14 @@ class EvadavClient(TrafficSourceClient):
 
             return f'Error occurred while trying to add zones to audience in evadav: {response}'
 
-        if response.status_code != HTTP_200_SUCCESS:
-            self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
-                                     headers=json.dumps(headers), body=data, type_='POST',
-                                     response=str(response.text),
-                                     status_code=response.status_code,
-                                     description=f'request to add zones to list in evadav')
-
-            return f'Non-success status code occurred while trying to ' \
-                   f'add zones to audience in evadav: {response.content}'
-
         self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                  headers=json.dumps(headers), body=data, type_='POST',
                                  response=str(response.text),
                                  status_code=response.status_code,
                                  description=f'request to add zones to list in evadav')
+
+        if response.status_code != HTTP_200_SUCCESS:
+            return f'Non-success status code occurred while trying to ' \
+                   f'add zones to audience in evadav: {response.content}'
 
         return 'OK'
