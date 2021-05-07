@@ -59,6 +59,7 @@ class KadamClient(TrafficSourceClient):
             return f'Incorrect list type: {list_type}'
 
         params['data'] = data
+
         response = requests_manager.patch(requests_url, params=params)
 
         # TODO: log response here and all requests details
