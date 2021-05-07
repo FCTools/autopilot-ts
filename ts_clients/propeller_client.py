@@ -73,8 +73,6 @@ class PropellerClient(TrafficSourceClient):
 
         response = requests_manager.get(requests_url, params=params, headers=headers)
 
-        # TODO: log response here and all requests details
-
         if not isinstance(response, requests.Response):
             self._logger.log_request(task_id, time_=str(datetime.now()), request_url=requests_url + urlencode(params),
                                      headers=json.dumps(headers), body='null', type_='GET', response=str(response),
@@ -105,8 +103,6 @@ class PropellerClient(TrafficSourceClient):
                        "Content-Type": "application/json"}
 
             response = requests_manager.put(requests_url, data=data, params=params, headers=headers)
-
-            # TODO: log response here and all requests details
 
             if not isinstance(response, requests.Response):
                 self._logger.log_request(task_id, time_=str(datetime.now()),
