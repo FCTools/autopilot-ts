@@ -23,7 +23,36 @@ class KadamClient(TrafficSourceClient):
         super().__init__()
         self._setup_logger('kadam')
 
+    def _generate_api_key(self, data):
+        app_id = data['app_id']
+        secret_key = data['secret_key']
+
+        response = requests_manager.get('http://api.kadam.net/auth.token', params={'app_id': app_id,
+                                                                                   'secret_key': secret_key})
+
+        if not isinstance(response, requests.Response):
+            return False, f'Error occurred while trying to generate access_token in kadam: {response}'
+
+        if response.status_code != HTTP_200_SUCCESS:
+            self._logger.error(response.text)
+            return False, f'Error occurred while trying to generate access_token in kadam: {response.content}'
+
+        try:
+            access_token = response.json()['access_token']
+            return True, access_token
+        except json.JSONDecodeError as exc:
+            self._logger.error(f'Error occurred while trying to decode kadam response (access_token generating): {exc.doc}')
+            return False, '-'
+        except KeyError:
+            self._logger.error(f"Can't find field access_token in kadam-response (access_token generating): {response.json()}")
+            return False, '-'
+
     def change_campaign_status(self, campaign_id, api_key, status, client_key=None):
+        success, api_key = self._generate_api_key(api_key)
+
+        if not success:
+            return "Can't generate kadam access_token"
+
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
@@ -46,6 +75,11 @@ class KadamClient(TrafficSourceClient):
         return 'OK'
 
     def add_zones_to_list(self, campaign_id, zones_list, api_key, list_type=None, list_to_add=None, client_key=None):
+        success, api_key = self._generate_api_key(api_key)
+
+        if not success:
+            return "Can't generate kadam access_token"
+
         requests_url = self._base_requests_url + f'ads.campaigns.update/'
 
         signature = md5(f'. {api_key}'.encode(encoding='utf-8'))
